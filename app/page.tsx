@@ -5,6 +5,7 @@ import Intro from "@/components/Intro";
 import ImpactHighlights from "@/components/ImpactHighlights";
 import VisionBanner from "@/components/VisionBanner";
 import CoreValues from "@/components/CoreValues";
+import Stats from "@/components/Stats";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Intro />
       <CoreValues />
       <ImpactHighlights />
+      <Stats />
       <VisionBanner />
     </div>
   );
