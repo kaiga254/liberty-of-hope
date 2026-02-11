@@ -54,7 +54,7 @@ const Counter = ({ value, suffix }: { value: number; suffix: string }) => {
 
 export default function Stats() {
   return (
-    <section className="py-20 bg-secondary text-white">
+    <section className="py-20 bg-primary text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/20">
           {stats.map((stat, index) => (

@@ -42,14 +42,14 @@ const highlights = [
 
 export default function ImpactHighlights() {
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section className="py-32 bg-stone-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={stagger}
-          className="flex flex-col gap-24"
+          className="flex flex-col gap-32"
         >
           {highlights.map((item, index) => {
             const isEven = index % 2 === 0;

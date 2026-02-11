@@ -7,7 +7,7 @@ import { fadeInUp, stagger } from "@/lib/animations";
 
 export default function VisionBanner() {
   return (
-    <section className="py-24 relative overflow-hidden bg-secondary text-white">
+    <section className="py-32 relative overflow-hidden bg-secondary text-white">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-10">
         <Globe className="w-96 h-96" />
       </div>
