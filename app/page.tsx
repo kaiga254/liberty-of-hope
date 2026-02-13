@@ -6,6 +6,7 @@ import ImpactHighlights from "@/components/ImpactHighlights";
 import VisionBanner from "@/components/VisionBanner";
 import CoreValues from "@/components/CoreValues";
 import Stats from "@/components/Stats";
+import RecentProjects from "@/components/RecentProjects";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <CoreValues />
       <ImpactHighlights />
       <Stats />
+      <RecentProjects />
       <VisionBanner />
     </div>
   );
