@@ -6,6 +6,7 @@ import Link from "next/link";
 
 const projects = [
   {
+    id: 1,
     title: "Thika Medical Camp 2024",
     category: "Health",
     date: "March 15, 2024",
@@ -16,6 +17,7 @@ const projects = [
     imageColor: "bg-blue-100",
   },
   {
+    id: 2,
     title: "Grandparents' Social Day",
     category: "Community",
     date: "Ongoing (Monthly)",
@@ -26,6 +28,7 @@ const projects = [
     imageColor: "bg-purple-100",
   },
   {
+    id: 3,
     title: "Home Hygiene Drive",
     category: "Dignity",
     date: "Feb 2024",
@@ -36,6 +39,7 @@ const projects = [
     imageColor: "bg-orange-100",
   },
   {
+    id: 4,
     title: "Urban Farming Initiative",
     category: "Nutrition",
     date: "Upcoming",
@@ -126,7 +130,7 @@ export default function ProjectsPage() {
 
                 <div className="mt-auto">
                   <Link
-                    href="/about"
+                    href={`/projects/${project.id}`}
                     className="inline-flex items-center text-primary text-sm font-semibold hover:gap-2 transition-all"
                   >
                     Read Story <ArrowRight className="w-4 h-4 ml-1" />
