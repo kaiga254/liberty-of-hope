@@ -1,32 +1,54 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { Heart, Shield, Users, Star } from "lucide-react";
+import {
+  Stethoscope,
+  Brain,
+  Apple,
+  HeartHandshake,
+  Megaphone,
+} from "lucide-react";
 
-const values = [
+const pillars = [
   {
-    title: "Dignity",
-    description: "We honor the life experience of every elder.",
-    gradient: "from-orange-400 to-red-500",
-    icon: Star,
+    title: "Health & Wellness",
+    description:
+      "Organizing medical camps, geriatric screenings, and partnerships with local hospitals for accessible healthcare.",
+    outcome: "200+ seniors screened in our latest medical camp",
+    icon: Stethoscope,
+    gradient: "from-teal-500 to-emerald-600",
   },
   {
-    title: "Compassion",
-    description: "We serve with kindness and empathy.",
-    gradient: "from-pink-500 to-rose-500",
-    icon: Heart,
+    title: "Mental Health & Connection",
+    description:
+      "Combating isolation through peer support groups, social gatherings, and community visits for mental wellness.",
+    outcome: "Weekly social meetups reducing loneliness by 70%",
+    icon: Brain,
+    gradient: "from-violet-500 to-purple-600",
   },
   {
-    title: "Integrity",
-    description: "Transparency and accountability in all we do.",
-    gradient: "from-emerald-400 to-teal-600",
-    icon: Shield,
+    title: "Nutrition & Lifestyle",
+    description:
+      "Providing food baskets, nutritional education, and supporting sustainable kitchen gardens for healthy aging.",
+    outcome: "50+ elders receiving monthly food baskets",
+    icon: Apple,
+    gradient: "from-green-500 to-emerald-600",
   },
   {
-    title: "Inclusivity",
-    description: "We serve all, regardless of background.",
-    gradient: "from-blue-400 to-indigo-600",
-    icon: Users,
+    title: "Dignity & Personal Care",
+    description:
+      "Restoring self-esteem through personal grooming, hygiene supplies, and home cleanliness for dignified living.",
+    outcome: "15 homes renovated in our latest hygiene drive",
+    icon: HeartHandshake,
+    gradient: "from-rose-500 to-pink-600",
+  },
+  {
+    title: "Advocacy & Outreach",
+    description:
+      "Advocating for elder-friendly policies and conducting home visits to identify and support the most vulnerable.",
+    outcome: "Partnered with 2 county governments for policy change",
+    icon: Megaphone,
+    gradient: "from-amber-500 to-orange-600",
   },
 ];
 
@@ -34,14 +56,12 @@ const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
+    transition: { staggerChildren: 0.12 },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 25, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
@@ -51,11 +71,11 @@ const itemVariants: Variants = {
 
 export default function CoreValues() {
   return (
-    <section className="py-20 md:py-32 bg-orange-50/30 relative overflow-hidden">
-      {/* Background Decor Elements */}
+    <section className="py-24 md:py-32 bg-sage relative overflow-hidden">
+      {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,15 +86,12 @@ export default function CoreValues() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center justify-center bg-orange-100 p-3 rounded-full mb-4">
-              <Star className="w-6 h-6 text-primary" fill="currentColor" />
-            </div>
             <h2 className="text-3xl md:text-5xl font-bold font-heading text-secondary mb-4">
-              Our <span className="text-primary">Values</span>
+              Our Pillars of <span className="text-primary">Care</span>
             </h2>
-            <p className="text-base md:text-lg text-secondary/70 max-w-2xl mx-auto">
-              The foundational principles that guide our mission and shape our
-              commitment to the community.
+            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+              A holistic approach addressing the physical, emotional, and social
+              needs of our elderly community.
             </p>
           </motion.div>
         </div>
@@ -83,41 +100,36 @@ export default function CoreValues() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
-          {values.map((value, index) => {
-            const Icon = value.icon;
+          {pillars.map((pillar) => {
+            const Icon = pillar.icon;
             return (
               <motion.div
-                key={value.title}
+                key={pillar.title}
                 variants={itemVariants}
-                whileHover={{ y: -10 }}
-                className="group relative bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 border border-orange-100/50 overflow-hidden flex flex-col h-full"
+                whileHover={{ y: -8 }}
+                className="group relative bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full"
               >
-                {/* Subtle background gradient reveal on hover */}
+                {/* Top accent bar */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-300`}
+                  className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${pillar.gradient} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out`}
                 />
 
-                {/* Top border highlight */}
-                <div
-                  className={`absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r ${value.gradient} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out`}
-                />
-
-                <div className="relative z-10 flex flex-col h-full items-start">
+                <div className="relative z-10 flex flex-col h-full">
                   <div
-                    className={`w-14 h-14 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br ${value.gradient} text-white shadow-lg shadow-black/5 transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-300 ease-out`}
+                    className={`w-14 h-14 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br ${pillar.gradient} text-white shadow-lg shadow-black/5 transform group-hover:rotate-3 group-hover:scale-110 transition-all duration-300`}
                   >
                     <Icon className="w-7 h-7" />
                   </div>
 
-                  <h3 className="text-xl md:text-2xl font-bold font-heading text-secondary mb-3 group-hover:text-primary transition-colors duration-300">
-                    {value.title}
+                  <h3 className="text-xl font-bold font-heading text-secondary mb-3 group-hover:text-primary transition-colors duration-300">
+                    {pillar.title}
                   </h3>
 
-                  <p className="text-secondary/70 leading-relaxed font-medium transition-colors duration-300">
-                    {value.description}
+                  <p className="text-gray-600 leading-relaxed mb-6 grow">
+                    {pillar.description}
                   </p>
                 </div>
               </motion.div>

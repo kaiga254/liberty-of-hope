@@ -14,15 +14,22 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Liberty of Hope - Restoring Dignity",
+  title: "Liberty of Hope — Restoring Dignity to Every Senior Life",
   description:
-    "A community-based organization in Thika, Kenya, dedicated to restoring dignity to the aged.",
+    "Liberty of Hope is a community-based organization in Thika, Kenya, dedicated to restoring dignity, health, and joy to senior citizens through healthcare, nutrition, and advocacy programs.",
+  keywords: [
+    "elderly care Kenya",
+    "senior citizens",
+    "Thika",
+    "donate",
+    "volunteer",
+    "community organization",
+    "Liberty of Hope",
+  ],
 };
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-// ... existing imports ...
 
 export default function RootLayout({
   children,

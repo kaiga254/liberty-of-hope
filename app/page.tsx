@@ -7,6 +7,7 @@ import VisionBanner from "@/components/VisionBanner";
 import CoreValues from "@/components/CoreValues";
 import Stats from "@/components/Stats";
 import RecentProjects from "@/components/RecentProjects";
+import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
   return (
@@ -14,8 +15,9 @@ export default function Home() {
       <Hero />
       <Intro />
       <CoreValues />
-      <ImpactHighlights />
       <Stats />
+      <ImpactHighlights />
+      <Testimonials />
       <RecentProjects />
       <VisionBanner />
     </div>

@@ -7,8 +7,6 @@ import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import DonationModal from "@/components/Modals/DonationModal";
 
-// Merged mock data from both RecentProjects and Projects pages
-// In a real app, this would be fetched from an API or database
 const projectsData = [
   {
     id: "1",
@@ -26,7 +24,7 @@ const projectsData = [
       "Offer education on diabetes dietary management",
     ],
     status: "Completed",
-    imageColor: "bg-blue-100",
+    image: "/images/medical-camp.png",
   },
   {
     id: "2",
@@ -44,7 +42,7 @@ const projectsData = [
       "Provide nutritional support through shared meals",
     ],
     status: "Ongoing",
-    imageColor: "bg-purple-100",
+    image: "/images/community-gathering.png",
   },
   {
     id: "3",
@@ -62,7 +60,7 @@ const projectsData = [
       "Improve overall living standards",
     ],
     status: "Completed",
-    imageColor: "bg-orange-100",
+    image: "/images/hero-community.png",
   },
   {
     id: "4",
@@ -80,7 +78,7 @@ const projectsData = [
       "Conduct specialized training for elders",
     ],
     status: "Upcoming",
-    imageColor: "bg-green-100",
+    image: "/images/elder-portrait.png",
   },
 ];
 
@@ -98,11 +96,14 @@ export default function ProjectDetail() {
   return (
     <>
       <main className="min-h-screen bg-gray-50 pb-20">
-        {/* Project Hero Image Area */}
-        <div
-          className={`w-full h-[40vh] md:h-[50vh] ${project.imageColor} relative flex items-center justify-center overflow-hidden`}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/30 to-transparent z-10" />
+        {/* Project Hero */}
+        <div className="w-full h-[40vh] md:h-[50vh] relative overflow-hidden">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/40 to-transparent z-10" />
 
           {/* Back Button */}
           <Link
@@ -111,10 +112,6 @@ export default function ProjectDetail() {
           >
             <ArrowLeft className="w-4 h-4" /> Back to Projects
           </Link>
-
-          <span className="text-secondary/40 font-bold text-4xl transform -rotate-12 select-none absolute z-0 pointer-events-none">
-            Image Placeholder
-          </span>
 
           <div className="absolute bottom-0 left-0 w-full z-20 p-6 md:p-12 max-w-7xl mx-auto">
             <motion.div
@@ -129,7 +126,7 @@ export default function ProjectDetail() {
                 <span
                   className={`text-xs font-bold px-3 py-1 rounded-full border shadow-sm ${
                     project.status === "Ongoing"
-                      ? "bg-green-500 border-green-400 text-white"
+                      ? "bg-emerald-500 border-emerald-400 text-white"
                       : project.status === "Upcoming"
                         ? "bg-amber-500 border-amber-400 text-white"
                         : "bg-gray-100 border-gray-200 text-gray-600"
@@ -145,10 +142,10 @@ export default function ProjectDetail() {
           </div>
         </div>
 
-        {/* Content Section */}
+        {/* Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
           <div className="flex flex-col lg:flex-row gap-12">
-            {/* Main Content (Left) */}
+            {/* Main Content */}
             <div className="lg:w-2/3">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -170,7 +167,7 @@ export default function ProjectDetail() {
                   {project.details}
                 </p>
 
-                <div className="bg-orange-50/50 rounded-2xl p-6 md:p-8 border border-orange-100">
+                <div className="bg-sage rounded-2xl p-6 md:p-8 border border-teal-100">
                   <h3 className="text-xl font-bold font-heading text-secondary mb-4">
                     Key Objectives
                   </h3>
@@ -188,7 +185,7 @@ export default function ProjectDetail() {
               </motion.div>
             </div>
 
-            {/* Sidebar (Right) */}
+            {/* Sidebar */}
             <div className="lg:w-1/3">
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
@@ -196,15 +193,14 @@ export default function ProjectDetail() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="sticky top-28 space-y-6"
               >
-                {/* Project Info Card */}
+                {/* Info Card */}
                 <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold font-heading text-secondary mb-6 border-b pb-4">
                     Project Details
                   </h3>
-
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-blue-50 p-3 rounded-xl text-blue-600">
+                      <div className="bg-teal-50 p-3 rounded-xl text-primary">
                         <Calendar className="w-5 h-5" />
                       </div>
                       <div>
@@ -216,9 +212,8 @@ export default function ProjectDetail() {
                         </p>
                       </div>
                     </div>
-
                     <div className="flex items-start gap-4">
-                      <div className="bg-orange-50 p-3 rounded-xl text-primary">
+                      <div className="bg-teal-50 p-3 rounded-xl text-primary">
                         <MapPin className="w-5 h-5" />
                       </div>
                       <div>
@@ -238,14 +233,14 @@ export default function ProjectDetail() {
                   <h3 className="text-2xl font-bold font-heading mb-3">
                     Support This Cause
                   </h3>
-                  <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
                     Your contribution helps us continue this project and touch
                     more lives. Stand with us to bring dignity back to our
                     elders.
                   </p>
                   <button
                     onClick={() => setIsDonateOpen(true)}
-                    className="w-full bg-primary hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-orange-500/30 hover:-translate-y-1 cursor-pointer"
+                    className="w-full bg-accent-rose hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-red-500/30 hover:-translate-y-1 cursor-pointer"
                   >
                     <Heart className="w-5 h-5 fill-current" /> Donate Now
                   </button>

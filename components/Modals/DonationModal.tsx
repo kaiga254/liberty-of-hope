@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Heart, Phone, Building2 } from "lucide-react";
+import { X, Heart, Phone, Building2, Shield, Check } from "lucide-react";
 
 export default function DonationModal({
   isDonateOpen,
@@ -11,6 +11,8 @@ export default function DonationModal({
   isDonateOpen: boolean;
   setIsDonateOpen: (value: boolean) => void;
 }) {
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(1000);
+
   return (
     <AnimatePresence>
       {isDonateOpen && (
@@ -23,7 +25,6 @@ export default function DonationModal({
             className="absolute inset-0 bg-secondary/60 backdrop-blur-sm"
           />
 
-          {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -38,26 +39,26 @@ export default function DonationModal({
             </button>
 
             <div className="overflow-y-auto p-6 md:p-10">
+              {/* Header */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-2xl mb-4 text-primary">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-rose-100 rounded-2xl mb-4 text-accent-rose">
                   <Heart className="w-8 h-8 fill-current" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold font-heading text-secondary mb-3">
-                  Make a Difference Today
+                  Support a Senior Today
                 </h2>
                 <p className="text-gray-600 leading-relaxed max-w-lg mx-auto">
-                  Your generous donation directly supports the vulnerable elders
-                  in our community. The funds are used to provide essential
-                  healthcare, nutritious food, safe shelter, and emotional
-                  support programs that restore their dignity and hope.
+                  Your generous donation directly supports vulnerable elders
+                  with healthcare, nutrition, shelter, and dignity programs.
                 </p>
               </div>
 
+              {/* Payment Methods */}
               <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-                {/* M-Pesa Info */}
-                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-green-200 transition-colors group">
+                {/* M-Pesa */}
+                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-emerald-200 transition-colors group">
                   <div className="flex items-center gap-3 mb-5">
-                    <div className="p-2.5 bg-green-100 rounded-lg text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <div className="p-2.5 bg-emerald-100 rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                       <Phone className="w-5 h-5" />
                     </div>
                     <h3 className="font-bold text-lg text-secondary">M-Pesa</h3>
@@ -68,7 +69,7 @@ export default function DonationModal({
                         Paybill Number
                       </p>
                       <p className="font-mono font-bold text-xl tracking-wider text-secondary">
-                        123456 {/* Replace with real paybill */}
+                        123456
                       </p>
                     </div>
                     <div>
@@ -80,7 +81,7 @@ export default function DonationModal({
                   </div>
                 </div>
 
-                {/* Bank Info */}
+                {/* Bank */}
                 <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-blue-200 transition-colors group">
                   <div className="flex items-center gap-3 mb-5">
                     <div className="p-2.5 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -95,9 +96,7 @@ export default function DonationModal({
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                         Bank Name
                       </p>
-                      <p className="font-medium text-secondary">
-                        XYZ Bank Name
-                      </p>
+                      <p className="font-medium text-secondary">Equity Bank</p>
                     </div>
                     <div>
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
@@ -112,15 +111,26 @@ export default function DonationModal({
                         Account Number
                       </p>
                       <p className="font-mono font-bold text-lg tracking-wider text-secondary">
-                        01234567890 {/* Replace with real account number */}
+                        01234567890
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-                <p className="text-sm font-medium text-gray-500">
+              {/* Trust badges */}
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+                  <div className="flex items-center gap-1.5">
+                    <Shield className="w-4 h-4 text-primary" />
+                    <span>Secure & Transparent</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>100% Goes to Elders</span>
+                  </div>
+                </div>
+                <p className="text-xs text-center text-gray-400 mt-3">
                   Thank you for standing with our elders. Your kindness brings
                   light to their golden years.
                 </p>
