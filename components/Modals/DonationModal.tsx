@@ -69,14 +69,14 @@ export default function DonationModal({
                         Paybill Number
                       </p>
                       <p className="font-mono font-bold text-xl tracking-wider text-secondary">
-                        123456
+                        542542
                       </p>
                     </div>
                     <div>
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                         Account Number
                       </p>
-                      <p className="font-medium text-secondary">Liberty</p>
+                      <p className="font-medium text-secondary">32419</p>
                     </div>
                   </div>
                 </div>

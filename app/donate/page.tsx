@@ -63,14 +63,14 @@ export default function DonatePage() {
                     Paybill Number
                   </p>
                   <p className="font-mono font-bold text-2xl text-secondary tracking-wider">
-                    123456
+                    542542
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
                     Account Number
                   </p>
-                  <p className="font-semibold text-secondary">Liberty</p>
+                  <p className="font-semibold text-secondary">32419</p>
                 </div>
                 <div className="text-sm text-gray-500 bg-gray-50 rounded-xl p-3">
                   <p className="font-medium mb-1">How to pay:</p>
