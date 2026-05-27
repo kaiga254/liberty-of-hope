@@ -1,36 +1,520 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Liberty of Hope Developer Documentation
 
-## Getting Started
+Last updated: 2026-05-27
 
-First, run the development server:
+## Project Overview
+
+Liberty of Hope is a public website for a community-based organization in Thika, Kenya that supports senior citizens through healthcare, nutrition, advocacy, social connection, personal care, donations, volunteering, and partnerships.
+
+The site is built with Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion, and Lucide icons. It is currently a mostly static marketing and information site, with one client-side contact form integration through EmailJS and an optional Google Maps embed.
+
+The main developer responsibilities are likely to be:
+
+- Updating page content, projects, team members, partner logos, contact information, and donation details.
+- Maintaining the frontend experience across desktop and mobile.
+- Keeping environment variables configured for the contact form and map embed.
+- Deploying the site, most naturally to Vercel or another Node-compatible host.
+- Eventually refactoring duplicated hard-coded content into shared data files or a CMS if the organization needs frequent non-developer updates.
+
+## Tech Stack
+
+- Framework: `next` 16.1.6 using the App Router.
+- UI: `react` 19.2.3 and `react-dom` 19.2.3.
+- Language: TypeScript.
+- Styling: Tailwind CSS 4 through `@tailwindcss/postcss`.
+- Animation: `framer-motion`.
+- Icons: `lucide-react`.
+- Utility packages: `clsx`, `tailwind-merge`, `tailwindcss-animate`.
+- Linting: ESLint 9 with `eslint-config-next`.
+
+## Local Setup
+
+### Prerequisites
+
+Use a recent Node.js version that supports Next.js 16 and React 19. Node 20 or newer is recommended.
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run The Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build For Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### Run The Production Server Locally
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Run `npm run build` before `npm run start`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Lint
 
-## Deploy on Vercel
+```bash
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copy `.env.example` to `.env.local` for local development:
+
+```bash
+cp .env.example .env.local
+```
+
+The project currently supports these public environment variables:
+
+| Variable | Required | Used In | Purpose |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS service id for sending contact form messages. |
+| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS template id. |
+| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS public key. |
+| `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY` | Optional | `app/contact/page.tsx` | Google Maps Embed API key. |
+| `NEXT_PUBLIC_GOOGLE_MAPS_QUERY` | Optional | `app/contact/page.tsx` | Place or address query for the embedded map and map search link. |
+
+If the EmailJS variables are missing, the contact form validates input but shows a fallback message asking users to email `info@libertyofhope.org` directly.
+
+If the Google Maps API key is missing, the contact page shows a styled fallback map panel and still provides an "Open Map" Google Maps search link.
+
+Because all variables are prefixed with `NEXT_PUBLIC_`, they are exposed to the browser. Do not put private secrets in these variables.
+
+## High-Level Architecture
+
+This is a frontend-first Next.js application.
+
+- `app/layout.tsx` defines global metadata, fonts, the shared navbar, the main page wrapper, and the shared footer.
+- `app/page.tsx` composes the homepage from section components in `components/`.
+- `app/*/page.tsx` files define top-level pages for About, Programs, Projects, Donate, and Contact.
+- `app/projects/[id]/page.tsx` defines a dynamic project-detail route, but it reads from a local hard-coded array instead of fetching from a database.
+- `components/` contains shared and homepage section components.
+- `components/Modals/DonationModal.tsx` contains the reusable donation modal opened from the navbar, footer, recent projects, and project detail page.
+- `lib/animations.ts` centralizes common Framer Motion variants.
+- `public/images/` contains all image assets, logos, and profile images.
+- `app/globals.css` defines Tailwind import, CSS variables, theme tokens, fonts, global styles, and partner logo marquee animation.
+
+There is no API route, database, authentication, CMS, or server-side data fetching in the current version.
+
+## Application Routes
+
+| Route | File | Purpose |
+| --- | --- | --- |
+| `/` | `app/page.tsx` | Homepage composed from hero, intro, values, stats, impact highlights, testimonials, recent projects, and CTA sections. |
+| `/about` | `app/about/page.tsx` | Organization story, values, and team. |
+| `/programs` | `app/programs/page.tsx` | Program pillars and contact CTA. |
+| `/projects` | `app/projects/page.tsx` | Project listing with status badges, links to project detail pages, and donation CTA for active/upcoming work. |
+| `/projects/[id]` | `app/projects/[id]/page.tsx` | Project detail page using the `id` from the URL and local `projectsData`. |
+| `/donate` | `app/donate/page.tsx` | Full donation page with M-Pesa, bank transfer, trust indicators, and FAQs. |
+| `/contact` | `app/contact/page.tsx` | Contact information, optional Google map, and EmailJS-powered contact form. |
+
+Important: Several components currently link to `/get-involved`, but there is no `app/get-involved/page.tsx` route. See "Known Issues And Maintenance Notes".
+
+## File And Folder Guide
+
+```text
+app/
+  about/page.tsx           About page content, values, and team list.
+  contact/page.tsx         Contact details, EmailJS form, map embed/fallback.
+  donate/page.tsx          Donation instructions and donation FAQ.
+  globals.css              Global CSS, Tailwind theme tokens, marquee animation.
+  layout.tsx               Root layout, metadata, fonts, navbar, footer.
+  page.tsx                 Homepage composition.
+  programs/page.tsx        Program pillar list and program CTA.
+  projects/page.tsx        Project listing page.
+  projects/[id]/page.tsx   Dynamic project detail page.
+
+components/
+  CoreValues.tsx           Homepage care pillars.
+  Footer.tsx               Site footer, quick links, social links, contact info.
+  Hero.tsx                 Homepage hero.
+  ImpactHighlights.tsx     Homepage focus areas with alternating image sections.
+  Intro.tsx                Homepage introduction.
+  Modals/DonationModal.tsx Reusable donation modal.
+  Navbar.tsx               Fixed navbar, mobile menu, donation modal trigger.
+  RecentProjects.tsx       Homepage recent project cards.
+  Stats.tsx                Animated impact counters.
+  Testimonials.tsx         Testimonials and partner logo marquee.
+  VisionBanner.tsx         Homepage action CTA section.
+
+lib/
+  animations.ts            Shared Framer Motion variants.
+
+public/images/
+  Main site images, organization logo, partner logos, and profile images.
+```
+
+## Shared Layout And Metadata
+
+The global layout is in `app/layout.tsx`.
+
+It imports the Inter and Poppins Google fonts, applies global classes to the `<body>`, renders `<Navbar />` above every route, wraps page content in `<main className="grow pt-20">`, and renders `<Footer />` below every route.
+
+The global metadata is also defined here:
+
+- Title: `Liberty of Hope - Restoring Dignity to Every Senior Life`
+- Description: community-based organization in Thika, Kenya
+- Keywords: elderly care, senior citizens, Thika, donation, volunteering, and related terms
+
+Update `metadata` in `app/layout.tsx` when the brand positioning, SEO title, or site description changes.
+
+## Styling System
+
+Tailwind CSS is configured through `app/globals.css`, `postcss.config.mjs`, and the Tailwind 4 `@theme inline` syntax.
+
+Important theme tokens in `app/globals.css`:
+
+- `--color-primary`: deep teal, used for trust/calm CTAs and headings.
+- `--color-primary-light`: lighter teal.
+- `--color-secondary`: slate, used for dark sections and text.
+- `--color-accent`: amber.
+- `--color-accent-rose`: rose, used for donate CTAs.
+- `--color-warm`: soft cream.
+- `--color-sage`: soft green background.
+- `--font-inter`: body font.
+- `--font-poppins`: heading font.
+
+Most components use Tailwind utility classes directly. When adding new UI, prefer the existing color tokens and layout rhythm:
+
+- Section padding is usually `py-24` or `py-24 md:py-32`.
+- Page width is usually `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`.
+- Cards commonly use white backgrounds, light borders, subtle shadows, and `rounded-2xl` or `rounded-3xl`.
+- Donate CTAs use `bg-accent-rose`.
+- Primary CTAs and emphasis use `text-primary` or `bg-primary`.
+
+## Animation System
+
+Shared animation variants live in `lib/animations.ts`.
+
+Available variants:
+
+- `fadeInUp`
+- `fadeInDown`
+- `fadeInLeft`
+- `fadeInRight`
+- `scaleIn`
+- `stagger`
+- `staggerFast`
+
+Components import these variants and pass them into Framer Motion elements such as `motion.div`, `motion.h1`, and `motion.p`.
+
+When adding animated sections, reuse the shared variants unless the animation has a page-specific reason to be different. Most sections use `viewport={{ once: true }}` so animations run once when scrolled into view.
+
+## Navigation
+
+The primary navigation is defined in `components/Navbar.tsx`.
+
+The `navLinks` array controls desktop and mobile navigation:
+
+```ts
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "About Us", href: "/about" },
+  { name: "Programs", href: "/programs" },
+  { name: "Projects", href: "/projects" },
+  { name: "Contact", href: "/contact" },
+];
+```
+
+The navbar:
+
+- Is fixed at the top of the viewport.
+- Changes background/shadow after the user scrolls more than 20 pixels.
+- Highlights the active route using `usePathname()`.
+- Has a mobile menu powered by local React state and `AnimatePresence`.
+- Opens `DonationModal` through local state.
+
+If you add a new top-level page, update `navLinks` here and usually update `quickLinks` in `components/Footer.tsx` too.
+
+## Donation Experience
+
+Donation information appears in two places:
+
+- `components/Modals/DonationModal.tsx` for the modal.
+- `app/donate/page.tsx` for the full donation page.
+
+Current donation details shown in the modal:
+
+- M-Pesa Paybill Number: `542542`
+- M-Pesa Account Number: `32419`
+- Bank: `Equity Bank`
+- Account Name: `Liberty of Hope`
+- Account Number: `01234567890`
+
+Current donation details shown in the donate page include the same visible M-Pesa Paybill and account values, but the "How to pay" instructions still say "Business Number: 123456" and "Account: Liberty". This should be verified and corrected so all donation instructions match.
+
+When donation details change, update both files together and test:
+
+- The navbar Donate button.
+- The footer Donate button.
+- The homepage Recent Projects support buttons.
+- The project detail "Support This Cause" button.
+- The `/donate` page.
+
+## Contact Form
+
+The contact form is implemented entirely in `app/contact/page.tsx`.
+
+Key pieces:
+
+- `ContactFormData` defines the form fields.
+- `subjectOptions` defines the subject dropdown.
+- `validateContactForm()` validates name, email, subject, and message length.
+- `sendEmailJsMessage()` posts to `https://api.emailjs.com/api/v1.0/email/send`.
+- `emailJsConfig` reads the three EmailJS public environment variables.
+- `isEmailJsConfigured` determines whether to submit to EmailJS or show a fallback message.
+
+EmailJS template parameters sent by the form:
+
+- `from_name`
+- `from_email`
+- `reply_to`
+- `phone`
+- `subject`
+- `message`
+- `submitted_at`
+
+The form does not use a backend route, so spam protection, rate limiting, and server-side validation are not currently present. If the contact form becomes business-critical, consider adding a server-side route, CAPTCHA or Turnstile, and structured logging.
+
+## Google Maps
+
+The contact page optionally embeds a Google Map.
+
+Map configuration lives in `app/contact/page.tsx`:
+
+- `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY`
+- `NEXT_PUBLIC_GOOGLE_MAPS_QUERY`
+- `DEFAULT_MAP_QUERY`
+
+If the API key is present, the page renders a Google Maps Embed API iframe. If it is missing, the page renders a custom fallback panel with the configured address.
+
+The "Open Map" link always points to Google Maps search using the configured query.
+
+## Content Editing Guide
+
+Most content is currently hard-coded in React files. There is no central content directory yet.
+
+### Homepage
+
+Homepage composition is in `app/page.tsx`. The sections are rendered in this order:
+
+1. `Hero`
+2. `Intro`
+3. `CoreValues`
+4. `Stats`
+5. `ImpactHighlights`
+6. `Testimonials`
+7. `RecentProjects`
+8. `VisionBanner`
+
+Edit the individual files in `components/` to change the section content.
+
+### About Page
+
+Edit `app/about/page.tsx` for:
+
+- Organization story text.
+- Core values on the About page.
+- Team member names, roles, and images.
+
+The team data is in the `team` array. Team images currently reuse `public/images/profiles/pasport.webp`.
+
+### Programs Page
+
+Edit `app/programs/page.tsx` for:
+
+- Program titles.
+- Program descriptions.
+- Program icons.
+- Program gradients.
+- Bottom CTA text.
+
+The homepage care pillars in `components/CoreValues.tsx` duplicate similar program content. Update both if the public program model changes.
+
+### Projects Page
+
+Project data appears in multiple places:
+
+- `components/RecentProjects.tsx` for the homepage project cards.
+- `app/projects/page.tsx` for the project listing page.
+- `app/projects/[id]/page.tsx` for detail pages.
+
+These arrays are not shared. When adding or changing a project, update all relevant arrays manually and check that:
+
+- The `id` in the listing matches the detail route.
+- The detail page has a matching project in `projectsData`.
+- The image file exists in `public/images/`.
+- Status values are consistent.
+- Completed projects link to a meaningful story.
+- Ongoing/upcoming projects open the donation modal when appropriate.
+
+This duplication is a good future refactor candidate. A shared file such as `lib/projects.ts` would reduce drift.
+
+### Testimonials And Partners
+
+Edit `components/Testimonials.tsx` for:
+
+- Beneficiary or volunteer testimonials.
+- Partner logo list.
+- Partner logo marquee behavior.
+
+Partner logo files live in `public/images/logos/`.
+
+The marquee animation is defined in `app/globals.css` with:
+
+- `@keyframes logo-marquee`
+- `.logo-marquee`
+- `.logo-marquee-track`
+- `.logo-marquee-track--reverse`
+- `.logo-marquee-group`
+- `.logo-marquee-duplicate`
+
+Reduced-motion users get a non-animated wrapped logo layout.
+
+### Statistics
+
+Edit `components/Stats.tsx` for homepage impact numbers.
+
+The animated counter uses Framer Motion's `useMotionValue`, `useSpring`, and `useInView`. Each stat has:
+
+- `label`
+- `value`
+- `suffix`
+- `icon`
+- `color`
+
+### Footer
+
+Edit `components/Footer.tsx` for:
+
+- Footer quick links.
+- Footer contact address, phone, and email.
+- Social links.
+- Footer donate CTA.
+
+Social links currently use `#` placeholders. Replace them with real URLs before launch.
+
+## Images And Assets
+
+All public assets are served from `public/` and referenced with root-relative paths such as `/images/hero-community.png`.
+
+Important asset folders:
+
+- `public/images/logo/` for the Liberty of Hope logo.
+- `public/images/logos/` for partner logos.
+- `public/images/profiles/` for team/profile photos.
+- `public/images/` for general content imagery.
+
+When adding an image:
+
+1. Place it under the appropriate folder in `public/images/`.
+2. Reference it with a root-relative URL, for example `/images/new-photo.jpg`.
+3. Use descriptive `alt` text for meaningful images.
+4. Use empty `alt=""` only for decorative images.
+5. Check the image on mobile and desktop because many components use `object-cover`.
+
+## Deployment
+
+The easiest deployment target is Vercel because this is a standard Next.js application.
+
+Typical Vercel deployment flow:
+
+1. Push the repository to GitHub, GitLab, or Bitbucket.
+2. Import the project into Vercel.
+3. Set the framework preset to Next.js if it is not auto-detected.
+4. Use the default install command: `npm install`.
+5. Use the default build command: `npm run build`.
+6. Add environment variables from `.env.example` in the Vercel project settings.
+7. Deploy.
+
+For other Node hosts:
+
+```bash
+npm install
+npm run build
+npm run start
+```
+
+Make sure the host provides the same environment variables used locally.
+
+## Quality Assurance Checklist
+
+Before handing a change over, run:
+
+```bash
+npm run lint
+npm run build
+```
+
+Then manually check:
+
+- Homepage loads without console errors.
+- Navbar links work on desktop and mobile.
+- Mobile menu opens, closes, and does not trap the page behind it.
+- Donate modal opens from the navbar, footer, project cards, and project detail page.
+- `/donate` displays the correct M-Pesa and bank details.
+- `/contact` validates required fields and shows a useful fallback if EmailJS is not configured.
+- `/contact` sends a real EmailJS email when environment variables are configured.
+- `/contact` map renders when a Google Maps API key is configured.
+- `/projects` links open valid `/projects/[id]` pages.
+- Partner logos render and animate unless reduced-motion is enabled.
+- Images are not broken, overly cropped, or missing alt text.
+- The site works at common mobile widths, especially 360px to 430px.
+
+## Known Issues And Maintenance Notes
+
+These are current codebase observations a future maintainer should know about:
+
+- `/get-involved` is linked from `components/Hero.tsx` and `app/programs/page.tsx`, but no matching route exists. Either create `app/get-involved/page.tsx` or change those links to `/contact`.
+- `app/projects/[id]/page.tsx` references `/images/community-gathering.png` for project id `2`, but the existing asset is `public/images/community-gathering.jpg`. This can cause a broken image on `/projects/2`.
+- Donation details are duplicated in `components/Modals/DonationModal.tsx` and `app/donate/page.tsx`. The donate page instructions mention `Business Number: 123456` while the displayed Paybill is `542542`. Verify the official payment details and align both places.
+- `components/Modals/DonationModal.tsx` declares `selectedAmount` and `setSelectedAmount`, but the selected amount UI is not rendered. Remove this unused state or complete the amount selector.
+- Project data is duplicated across homepage, listing, and detail files. A shared `lib/projects.ts` module would reduce future content drift.
+- Program/pillar content is duplicated between `components/CoreValues.tsx` and `app/programs/page.tsx`. Consider sharing data if program details change often.
+- Social links in `components/Footer.tsx` currently point to `#` placeholders.
+- Contact details appear in both `components/Footer.tsx` and `app/contact/page.tsx`. Keep them synchronized or move them into a shared constants file.
+- The contact form is client-only. For stronger abuse protection and observability, add a server-side endpoint and anti-spam protection.
+
+## Suggested Future Improvements
+
+These are not required to run the project, but they would make long-term maintenance easier:
+
+- Create shared content modules such as `lib/projects.ts`, `lib/programs.ts`, `lib/contact.ts`, and `lib/donation.ts`.
+- Add a real `/get-involved` page or redirect all involvement CTAs to `/contact`.
+- Replace placeholder social links with real organization profiles.
+- Add Open Graph metadata and social preview images for better link sharing.
+- Use Next.js `Image` for optimized images if remote/image behavior is finalized.
+- Add automated tests for contact form validation and route rendering.
+- Add a CMS or structured content source if non-developers need to update projects, partners, and team members.
+- Add accessibility passes for focus states, dialog semantics, keyboard navigation, and reduced-motion behavior.
+
+## New Developer Onboarding Path
+
+A new developer can get productive quickly by following this sequence:
+
+1. Run `npm install` and `npm run dev`.
+2. Open `http://localhost:3000`.
+3. Read `app/layout.tsx` to understand global structure.
+4. Read `app/page.tsx` to understand the homepage composition.
+5. Open each component in `components/` while viewing the homepage sections.
+6. Read `app/contact/page.tsx` carefully because it contains the most behavior: validation, EmailJS submission, environment variable handling, and map fallback.
+7. Read `app/projects/page.tsx` and `app/projects/[id]/page.tsx` together to understand project routing and current content duplication.
+8. Review `app/globals.css` to understand colors, fonts, and logo marquee behavior.
+9. Run `npm run lint` and `npm run build` before making a release.
+
+## Ownership Notes
+
+The project is small and approachable, but the content is tightly coupled to the UI. The most important thing for future maintainers is to update duplicated content consistently until shared data modules or a CMS are introduced.
+
+For urgent production fixes, start with the relevant route file in `app/` or section component in `components/`, then verify the navbar, footer, donation modal, and mobile layout before deploying.
