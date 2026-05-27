@@ -6,7 +6,7 @@ import { Users, Stethoscope, HandHeart, MapPin } from "lucide-react";
 
 const stats = [
   {
-    label: "Seniors Reached",
+    label: "Elders Reached",
     value: 500,
     suffix: "+",
     icon: Users,

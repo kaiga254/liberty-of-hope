@@ -1,16 +1,209 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Send, Clock, Heart } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+} from "lucide-react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import { fadeInUp, fadeInLeft, fadeInRight, stagger } from "@/lib/animations";
-import Link from "next/link";
+
+type ContactFormData = {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+};
+
+type ContactFormErrors = Partial<Record<keyof ContactFormData, string>>;
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
+
+const CONTACT_EMAIL = "info@libertyofhope.org";
+const CONTACT_PHONE = "+254 700 123 456";
+const CONTACT_PHONE_LINK = "+254700123456";
+const CONTACT_LOCATION = "Thika Town, Near Main Market";
+const CONTACT_REGION = "Kiambu County, Kenya";
+const DEFAULT_MAP_QUERY = `${CONTACT_LOCATION}, ${CONTACT_REGION}`;
+const EMAILJS_ENDPOINT = "https://api.emailjs.com/api/v1.0/email/send";
+
+const subjectOptions = [
+  "General Inquiry",
+  "Volunteering",
+  "Donation Support",
+  "Partnership",
+  "Report an Elder in Need",
+];
+
+const initialFormData: ContactFormData = {
+  name: "",
+  email: "",
+  phone: "",
+  subject: subjectOptions[0],
+  message: "",
+};
+
+const emailJsConfig = {
+  serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
+  templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "",
+  publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
+};
+
+const isEmailJsConfigured = Boolean(
+  emailJsConfig.serviceId && emailJsConfig.templateId && emailJsConfig.publicKey
+);
+
+const mapsApiKey =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY?.trim() ?? "";
+const mapsQuery =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_QUERY?.trim() || DEFAULT_MAP_QUERY;
+const encodedMapsQuery = encodeURIComponent(mapsQuery);
+const isGoogleMapsConfigured = Boolean(mapsApiKey);
+const googleMapsEmbedSrc = `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
+  mapsApiKey
+)}&q=${encodedMapsQuery}&zoom=14`;
+const googleMapsSearchHref = `https://www.google.com/maps/search/?api=1&query=${encodedMapsQuery}`;
+
+function validateContactForm(formData: ContactFormData) {
+  const errors: ContactFormErrors = {};
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!formData.name.trim()) {
+    errors.name = "Please enter your name.";
+  }
+
+  if (!emailPattern.test(formData.email.trim())) {
+    errors.email = "Please enter a valid email address.";
+  }
+
+  if (!formData.subject.trim()) {
+    errors.subject = "Please choose a subject.";
+  }
+
+  if (formData.message.trim().length < 10) {
+    errors.message = "Please add a little more detail.";
+  }
+
+  return errors;
+}
+
+async function sendEmailJsMessage(formData: ContactFormData) {
+  if (!isEmailJsConfigured) {
+    throw new Error("EmailJS is not configured.");
+  }
+
+  const response = await fetch(EMAILJS_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      service_id: emailJsConfig.serviceId,
+      template_id: emailJsConfig.templateId,
+      user_id: emailJsConfig.publicKey,
+      template_params: {
+        from_name: formData.name.trim(),
+        from_email: formData.email.trim(),
+        reply_to: formData.email.trim(),
+        phone: formData.phone.trim() || "Not provided",
+        subject: formData.subject,
+        message: formData.message.trim(),
+        submitted_at: new Date().toISOString(),
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    throw new Error(errorMessage || "EmailJS request failed.");
+  }
+}
+
+function fieldClassName(hasError?: boolean) {
+  return `w-full rounded-xl border px-4 py-3 outline-none transition-all focus:border-transparent focus:ring-2 ${
+    hasError
+      ? "border-accent-rose bg-rose-50 focus:ring-accent-rose/40"
+      : "border-gray-300 focus:ring-primary"
+  }`;
+}
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
+  const [fieldErrors, setFieldErrors] = useState<ContactFormErrors>({});
+  const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [feedback, setFeedback] = useState("");
+
+  const handleFieldChange = (
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const fieldName = event.target.name as keyof ContactFormData;
+    const fieldValue = event.target.value;
+
+    setFormData((current) => ({ ...current, [fieldName]: fieldValue }));
+    setFieldErrors((current) => ({ ...current, [fieldName]: undefined }));
+
+    if (status !== "idle") {
+      setStatus("idle");
+      setFeedback("");
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const errors = validateContactForm(formData);
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setStatus("error");
+      setFeedback("Please check the highlighted fields and try again.");
+      return;
+    }
+
+    setStatus("submitting");
+    setFeedback("");
+
+    try {
+      await sendEmailJsMessage(formData);
+      setStatus("success");
+      setFeedback("Thank you. Your message has been sent successfully.");
+      setFormData(initialFormData);
+    } catch (error) {
+      if (isEmailJsConfigured) {
+        console.error("EmailJS contact form submission failed.", error);
+      }
+
+      setStatus("error");
+      setFeedback(
+        isEmailJsConfigured
+          ? `We could not send your message. Please email us directly at ${CONTACT_EMAIL}.`
+          : `The online form is being connected. Please email us directly at ${CONTACT_EMAIL}.`
+      );
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen">
       {/* Hero */}
       <section className="relative py-24 bg-gradient-to-br from-primary via-teal-700 to-teal-800 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <img
+            src="/images/medical-camp.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"></div>
           <motion.div
             initial="hidden"
             animate="visible"
@@ -65,9 +258,9 @@ export default function ContactPage() {
                       Visit Us
                     </h4>
                     <p className="text-gray-600">
-                      Thika Town, Near Main Market
+                      {CONTACT_LOCATION}
                       <br />
-                      Kiambu County, Kenya
+                      {CONTACT_REGION}
                     </p>
                   </div>
                 </div>
@@ -80,7 +273,12 @@ export default function ContactPage() {
                     <h4 className="font-semibold text-secondary text-lg">
                       Email Us
                     </h4>
-                    <p className="text-gray-600">info@libertyofhope.org</p>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="text-gray-600 transition-colors hover:text-primary"
+                    >
+                      {CONTACT_EMAIL}
+                    </a>
                   </div>
                 </div>
 
@@ -92,7 +290,12 @@ export default function ContactPage() {
                     <h4 className="font-semibold text-secondary text-lg">
                       Call Us
                     </h4>
-                    <p className="text-gray-600">+254 700 123 456</p>
+                    <a
+                      href={`tel:${CONTACT_PHONE_LINK}`}
+                      className="text-gray-600 transition-colors hover:text-primary"
+                    >
+                      {CONTACT_PHONE}
+                    </a>
                   </div>
                 </div>
 
@@ -113,11 +316,59 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Map placeholder */}
-              <div className="mt-10 bg-gray-100 rounded-2xl h-48 flex items-center justify-center border border-gray-200">
-                <div className="text-center text-gray-400">
-                  <MapPin className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm font-medium">Thika, Kenya</p>
+              <div className="mt-10 overflow-hidden rounded-xl border border-gray-200 bg-slate-100 shadow-sm">
+                <div className="h-72">
+                  {isGoogleMapsConfigured ? (
+                    <iframe
+                      title="Google Map showing Liberty of Hope in Thika, Kenya"
+                      src={googleMapsEmbedSrc}
+                      className="h-full w-full"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div className="relative flex h-full items-center justify-center overflow-hidden bg-sage">
+                      <div
+                        className="absolute inset-0 opacity-70"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(rgba(15, 118, 110, 0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 118, 110, 0.14) 1px, transparent 1px)",
+                          backgroundSize: "42px 42px",
+                        }}
+                      />
+                      <div className="relative max-w-xs rounded-xl border border-white/80 bg-white/90 px-6 py-5 text-center shadow-lg backdrop-blur">
+                        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white">
+                          <MapPin className="h-6 w-6" />
+                        </div>
+                        <p className="font-semibold text-secondary">
+                          {CONTACT_LOCATION}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-600">
+                          {CONTACT_REGION}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col gap-4 border-t border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-secondary">
+                      Liberty of Hope on Google Maps
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {CONTACT_LOCATION}, {CONTACT_REGION}
+                    </p>
+                  </div>
+                  <a
+                    href={googleMapsSearchHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary"
+                  >
+                    Open Map
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
                 </div>
               </div>
             </motion.div>
@@ -134,10 +385,7 @@ export default function ContactPage() {
                 <h3 className="text-2xl font-bold text-secondary mb-8 font-heading">
                   Send Us a Message
                 </h3>
-                <form
-                  className="space-y-6"
-                  onSubmit={(e) => e.preventDefault()}
-                >
+                <form className="space-y-6" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label
@@ -149,9 +397,26 @@ export default function ContactPage() {
                       <input
                         type="text"
                         id="c-name"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                        placeholder="John Doe"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleFieldChange}
+                        className={fieldClassName(Boolean(fieldErrors.name))}
+                        placeholder="Jane Doe"
+                        autoComplete="name"
+                        aria-invalid={Boolean(fieldErrors.name)}
+                        aria-describedby={
+                          fieldErrors.name ? "c-name-error" : undefined
+                        }
+                        required
                       />
+                      {fieldErrors.name ? (
+                        <p
+                          id="c-name-error"
+                          className="mt-2 text-sm text-accent-rose"
+                        >
+                          {fieldErrors.name}
+                        </p>
+                      ) : null}
                     </div>
                     <div>
                       <label
@@ -163,9 +428,26 @@ export default function ContactPage() {
                       <input
                         type="email"
                         id="c-email"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                        placeholder="john@example.com"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleFieldChange}
+                        className={fieldClassName(Boolean(fieldErrors.email))}
+                        placeholder="jane@example.com"
+                        autoComplete="email"
+                        aria-invalid={Boolean(fieldErrors.email)}
+                        aria-describedby={
+                          fieldErrors.email ? "c-email-error" : undefined
+                        }
+                        required
                       />
+                      {fieldErrors.email ? (
+                        <p
+                          id="c-email-error"
+                          className="mt-2 text-sm text-accent-rose"
+                        >
+                          {fieldErrors.email}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
 
@@ -178,14 +460,30 @@ export default function ContactPage() {
                     </label>
                     <select
                       id="c-subject"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-white"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleFieldChange}
+                      className={`${fieldClassName(
+                        Boolean(fieldErrors.subject)
+                      )} bg-white`}
+                      aria-invalid={Boolean(fieldErrors.subject)}
+                      aria-describedby={
+                        fieldErrors.subject ? "c-subject-error" : undefined
+                      }
+                      required
                     >
-                      <option>General Inquiry</option>
-                      <option>Volunteering</option>
-                      <option>Donation Support</option>
-                      <option>Partnership</option>
-                      <option>Report an Elder in Need</option>
+                      {subjectOptions.map((subject) => (
+                        <option key={subject}>{subject}</option>
+                      ))}
                     </select>
+                    {fieldErrors.subject ? (
+                      <p
+                        id="c-subject-error"
+                        className="mt-2 text-sm text-accent-rose"
+                      >
+                        {fieldErrors.subject}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -198,8 +496,12 @@ export default function ContactPage() {
                     <input
                       type="tel"
                       id="c-phone"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleFieldChange}
+                      className={fieldClassName(Boolean(fieldErrors.phone))}
                       placeholder="+254 700 000 000"
+                      autoComplete="tel"
                     />
                   </div>
 
@@ -212,51 +514,68 @@ export default function ContactPage() {
                     </label>
                     <textarea
                       id="c-message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleFieldChange}
                       rows={5}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
+                      className={`${fieldClassName(
+                        Boolean(fieldErrors.message)
+                      )} resize-none`}
                       placeholder="How can we help?"
+                      aria-invalid={Boolean(fieldErrors.message)}
+                      aria-describedby={
+                        fieldErrors.message ? "c-message-error" : undefined
+                      }
+                      required
                     />
+                    {fieldErrors.message ? (
+                      <p
+                        id="c-message-error"
+                        className="mt-2 text-sm text-accent-rose"
+                      >
+                        {fieldErrors.message}
+                      </p>
+                    ) : null}
                   </div>
+
+                  {feedback ? (
+                    <div
+                      role={status === "error" ? "alert" : "status"}
+                      className={`flex items-start gap-3 rounded-xl border p-4 text-sm ${
+                        status === "success"
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                          : "border-rose-200 bg-rose-50 text-rose-800"
+                      }`}
+                    >
+                      {status === "success" ? (
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
+                      ) : (
+                        <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                      )}
+                      <span>{feedback}</span>
+                    </div>
+                  ) : null}
 
                   <button
                     type="submit"
-                    className="w-full bg-primary hover:bg-teal-800 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                    disabled={status === "submitting"}
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary py-4 font-bold text-white shadow-lg transition-all duration-300 hover:bg-teal-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    <Send className="w-5 h-5" />
-                    Send Message
+                    {status === "submitting" ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-5 w-5" />
+                        Send Message
+                      </>
+                    )}
                   </button>
                 </form>
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Urgent CTA */}
-      <section className="py-16 bg-warm">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold font-heading text-secondary mb-4">
-            Know an Elder in Need?
-          </h2>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            If you know a senior citizen who needs urgent support — healthcare,
-            food, or shelter — please call us immediately or submit a report.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="tel:+254700123456"
-              className="inline-flex items-center gap-2 bg-accent-rose hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors shadow-lg"
-            >
-              <Phone className="w-5 h-5" />
-              Call Now: +254 700 123 456
-            </a>
-            <Link
-              href="/get-involved"
-              className="inline-flex items-center gap-2 bg-primary hover:bg-teal-800 text-white px-8 py-3 rounded-full font-semibold transition-colors"
-            >
-              <Heart className="w-5 h-5" />
-              Get Involved
-            </Link>
           </div>
         </div>
       </section>

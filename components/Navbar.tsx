@@ -7,11 +7,12 @@ import DonationModal from "./Modals/DonationModal";
 import { Menu, X, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const logoSrc = "/images/logo/liberty-of-hope-logo.png";
+
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   { name: "Programs", href: "/programs" },
-  { name: "Get Involved", href: "/get-involved" },
   { name: "Projects", href: "/projects" },
   { name: "Contact", href: "/contact" },
 ];
@@ -40,13 +41,17 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href="/" className="shrink-0 flex items-center gap-2.5">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white fill-current" />
-              </div>
-              <span className="text-xl font-bold text-secondary tracking-tight font-heading">
-                Liberty of Hope
-              </span>
+            <Link
+              href="/"
+              className="shrink-0 flex items-center"
+              aria-label="Liberty of Hope home"
+            >
+              <img
+                src={logoSrc}
+                alt="Liberty of Hope"
+                className="block object-contain"
+                style={{ height: "4rem", width: "auto" }}
+              />
             </Link>
 
             {/* Desktop Navigation */}

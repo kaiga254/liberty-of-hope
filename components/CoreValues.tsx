@@ -14,7 +14,7 @@ const pillars = [
     title: "Health & Wellness",
     description:
       "Organizing medical camps, geriatric screenings, and partnerships with local hospitals for accessible healthcare.",
-    outcome: "200+ seniors screened in our latest medical camp",
+    outcome: "200+ elders screened in our latest medical camp",
     icon: Stethoscope,
     gradient: "from-teal-500 to-emerald-600",
   },

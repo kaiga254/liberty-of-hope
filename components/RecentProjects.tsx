@@ -24,7 +24,7 @@ const projects: Project[] = [
     id: 1,
     title: "Thika Elders Medical Camp",
     description:
-      "A comprehensive medical checkup camp providing free screenings, medicine, and health education for over 200 seniors.",
+      "A comprehensive medical checkup camp providing free screenings, medicine, and health education for over 200 elders.",
     image: "/images/medical-camp.png",
     venue: "Thika Stadium",
     date: "August 12, 2025",
@@ -42,7 +42,7 @@ const projects: Project[] = [
   },
   {
     id: 3,
-    title: "Digital Literacy for Seniors",
+    title: "Digital Literacy for elders",
     description:
       "A workshop series teaching elders how to use smartphones to stay connected with family and access mobile banking.",
     image: "/images/hero-community.png",

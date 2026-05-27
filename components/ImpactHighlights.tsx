@@ -16,7 +16,7 @@ const highlights = [
   {
     title: "Timeless Connection",
     description:
-      "Combating loneliness through peer support groups and community social gatherings. Our weekly meetups provide a safe space for seniors to share stories, play games, and build lasting friendships that enrich their golden years.",
+      "Combating loneliness through peer support groups and community social gatherings. Our weekly meetups provide a safe space for elders to share stories, play games, and build lasting friendships that enrich their golden years.",
     icon: Users,
     colorClass: "bg-violet-100 text-violet-600",
     image: "/images/community-gathering.jpg",

@@ -17,7 +17,7 @@ export default function Intro() {
             className="lg:w-1/2"
           >
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-secondary mb-6 leading-tight">
-              Millions of Seniors Face{" "}
+              Millions of elders Face{" "}
               <span className="text-primary">Isolation & Neglect</span>
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-6">

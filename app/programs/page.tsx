@@ -16,7 +16,7 @@ const programs = [
   {
     title: "Health & Wellness",
     description:
-      "Access to healthcare is a fundamental right. We organize medical camps, geriatric screenings, and partner with local hospitals to ensure our seniors receive the care they need.",
+      "Access to healthcare is a fundamental right. We organize medical camps, geriatric screenings, and partner with local hospitals to ensure our elders receive the care they need.",
     icon: Stethoscope,
     gradient: "from-teal-500 to-emerald-600",
   },
@@ -156,12 +156,6 @@ export default function ProgramsPage() {
                   className="bg-white text-secondary hover:bg-gray-100 px-8 py-3 rounded-full font-semibold transition-colors shadow-lg"
                 >
                   Contact Us
-                </Link>
-                <Link
-                  href="/get-involved"
-                  className="bg-primary hover:bg-teal-800 text-white px-8 py-3 rounded-full font-semibold transition-colors"
-                >
-                  Become a Volunteer
                 </Link>
               </div>
             </div>

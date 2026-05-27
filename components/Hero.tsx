@@ -30,7 +30,7 @@ export default function Hero() {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading mb-6 tracking-tight text-white leading-[1.1]"
             >
               Restoring Dignity{" "}
-              <span className="text-primary-light">& Joy</span> to Every Senior
+              <span className="text-primary-light">& Joy</span> to Every Elder's
               Life
             </motion.h1>
 
@@ -39,8 +39,8 @@ export default function Hero() {
               className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed"
             >
               We believe aging should be a celebration, not a sentence of
-              isolation. Liberty of Hope ensures seniors in Thika and beyond
-              live with honor, health, and happiness.
+              isolation. Liberty of Hope ensures elders in Thika and beyond live
+              with honor, health, and happiness.
             </motion.p>
 
             <motion.div
@@ -70,7 +70,7 @@ export default function Hero() {
             >
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold text-white">500+</span>
-                <span>Seniors Reached</span>
+                <span> Elders Reached</span>
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="flex items-center gap-2">

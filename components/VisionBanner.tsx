@@ -19,13 +19,13 @@ const actions = [
     description:
       "Join our team of compassionate volunteers making a difference every day.",
     icon: Users,
-    href: "/get-involved",
+    href: "/contact",
     color: "bg-primary hover:bg-teal-800 shadow-teal-500/30",
   },
   {
     title: "Partner",
     description:
-      "Collaborate with us to scale our impact and reach more seniors in need.",
+      "Collaborate with us to scale our impact and reach more elders in need.",
     icon: Handshake,
     href: "/contact",
     color: "bg-accent hover:bg-amber-600 shadow-amber-500/30",
@@ -34,20 +34,18 @@ const actions = [
 
 export default function VisionBanner() {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden bg-secondary text-white">
+    <section className="relative isolate overflow-hidden border-b-[8px] border-accent bg-[#eefaf7] py-24 text-secondary shadow-[inset_0_1px_0_rgba(15,118,110,0.12)] md:py-32">
       {/* Background */}
       <div className="absolute inset-0">
         <img
-          src="/images/community-gathering.png"
+          src="/images/community-gathering.jpg"
           alt=""
-          className="w-full h-full object-cover opacity-15"
+          className="h-full w-full object-cover opacity-15"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary via-secondary/95 to-secondary/90" />
+        <div className="absolute inset-0 bg-[#eefaf7]/95" />
       </div>
 
-      {/* Decorative blurs */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+      <div className="absolute inset-x-0 top-0 h-px bg-primary/15" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -59,7 +57,7 @@ export default function VisionBanner() {
         >
           <motion.span
             variants={fadeInUp}
-            className="inline-block bg-white/10 text-white/80 text-sm font-medium px-4 py-1.5 rounded-full mb-4 border border-white/10"
+            className="mb-4 inline-block rounded-full border border-primary/20 bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-sm"
           >
             Take Action Today
           </motion.span>
@@ -67,12 +65,12 @@ export default function VisionBanner() {
             variants={fadeInUp}
             className="text-3xl md:text-5xl font-bold font-heading mb-4"
           >
-            Every Senior Deserves{" "}
+            Every Elder Deserves{" "}
             <span className="text-primary-light">Dignity</span>
           </motion.h2>
           <motion.p
             variants={fadeInUp}
-            className="text-lg text-gray-400 max-w-2xl mx-auto"
+            className="mx-auto max-w-2xl text-lg text-slate-600"
           >
             Whether you donate, volunteer, or partner with us — your support
             transforms the golden years of our elders from isolation to
@@ -93,7 +91,7 @@ export default function VisionBanner() {
               <motion.div key={action.title} variants={fadeInUp}>
                 <Link
                   href={action.href}
-                  className="block bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-all duration-300 group"
+                  className="group block rounded-2xl border border-primary/15 bg-white p-8 text-center shadow-xl shadow-teal-900/10 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-2xl hover:shadow-teal-900/15"
                 >
                   <div
                     className={`w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center ${action.color} text-white shadow-lg transition-all duration-300 group-hover:scale-110`}
@@ -103,10 +101,10 @@ export default function VisionBanner() {
                   <h3 className="text-xl font-bold font-heading mb-3">
                     {action.title}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-5 leading-relaxed">
+                  <p className="mb-5 text-sm leading-relaxed text-slate-600">
                     {action.description}
                   </p>
-                  <span className="inline-flex items-center gap-1.5 text-primary-light font-semibold text-sm group-hover:gap-2.5 transition-all">
+                  <span className="inline-flex items-center gap-1.5 text-primary font-semibold text-sm group-hover:gap-2.5 transition-all">
                     Learn More <ArrowRight className="w-4 h-4" />
                   </span>
                 </Link>

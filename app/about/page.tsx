@@ -42,32 +42,21 @@ const values = [
   },
 ];
 
-const milestones = [
-  {
-    year: "2020",
-    event: "Founded in Thika, Kenya with a team of 5 volunteers",
-  },
-  { year: "2021", event: "First medical camp serving 50 seniors" },
-  { year: "2022", event: "Expanded to 2 counties, launched nutrition program" },
-  { year: "2023", event: "Reached 300+ seniors, partnered with county health" },
-  { year: "2024", event: "500+ seniors reached, 12 medical camps conducted" },
-];
-
 const team = [
   {
     name: "Grace Wanjiru",
     role: "Founder & Director",
-    image: "/images/hero-community.png",
+    image: "/images/profiles/pasport.webp",
   },
   {
     name: "Peter Njoroge",
     role: "Programs Manager",
-    image: "/images/medical-camp.png",
+    image: "/images/profiles/pasport.webp",
   },
   {
     name: "Sarah Muthoni",
     role: "Volunteer Coordinator",
-    image: "/images/community-gathering.jpg",
+    image: "/images/profiles/pasport.webp",
   },
 ];
 
@@ -78,7 +67,7 @@ export default function AboutPage() {
       <section className="relative py-24 bg-gradient-to-br from-primary via-teal-700 to-teal-800 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <img
-            src="/images/community-gathering.png"
+            src="/images/hero-community.png"
             alt=""
             className="w-full h-full object-cover"
           />
@@ -131,7 +120,7 @@ export default function AboutPage() {
                   </strong>
                 </p>
                 <p>
-                  Witnessing the neglect and loneliness faced by many seniors in
+                  Witnessing the neglect and loneliness faced by many elders in
                   our community, we gathered a team of passionate volunteers to
                   create a sanctuary of care. What started as weekly home visits
                   has grown into a movement restoring dignity, health, and joy
@@ -139,7 +128,7 @@ export default function AboutPage() {
                 </p>
                 <p>
                   Today, we stand as a beacon of hope, bridging the gap between
-                  generations and ensuring that every senior knows they are
+                  generations and ensuring that every elder knows they are
                   valued, loved, and never forgotten.
                 </p>
               </div>
@@ -160,49 +149,6 @@ export default function AboutPage() {
                 />
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section className="py-24 bg-sage">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold font-heading text-secondary">
-              Our Milestones
-            </h2>
-          </motion.div>
-          <div className="space-y-6">
-            {milestones.map((m, i) => (
-              <motion.div
-                key={m.year}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex items-start gap-6 group"
-              >
-                <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md group-hover:scale-110 transition-transform">
-                    <Calendar className="w-5 h-5" />
-                  </div>
-                  {i < milestones.length - 1 && (
-                    <div className="w-0.5 h-8 bg-primary/20 mt-2" />
-                  )}
-                </div>
-                <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex-1 group-hover:shadow-md transition-shadow">
-                  <span className="text-primary font-bold text-lg">
-                    {m.year}
-                  </span>
-                  <p className="text-gray-600 mt-1">{m.event}</p>
-                </div>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>

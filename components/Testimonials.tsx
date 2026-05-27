@@ -28,11 +28,85 @@ const testimonials = [
 ];
 
 const partners = [
-  "Kiambu County Health",
-  "Kenya Red Cross",
-  "UN Habitat",
-  "Safaricom Foundation",
-  "World Vision",
+  {
+    name: "Keyplest Foods",
+    logo: "/images/logos/keyplest-foods.png",
+  },
+  {
+    name: "Uhai Kenya NGO",
+    logo: "/images/logos/uhai-kenya-ngo.png",
+  },
+  {
+    name: "Sunveat",
+    logo: "/images/logos/sunveat.png",
+  },
+  {
+    name: "CFI",
+    logo: "/images/logos/cfi.png",
+  },
+  {
+    name: "Amara Realty",
+    logo: "/images/logos/amara-realty.png",
+  },
+  {
+    name: "Thika Nursing Home Hospital",
+    logo: "/images/logos/thika-nursing-home-hospital.png",
+  },
+  {
+    name: "Milestone Institute",
+    logo: "/images/logos/milestone-institute.png",
+  },
+  {
+    name: "MICOP-CBO",
+    logo: "/images/logos/micop-cbo.png",
+  },
+  {
+    name: "Community Partner",
+    logo: "/images/logos/partner-logo-09.png",
+  },
+  {
+    name: "HAMAT",
+    logo: "/images/logos/hamat.png",
+  },
+  {
+    name: "Lions SightFirst Eye Hospital",
+    logo: "/images/logos/lions-sightfirst-eye-hospital.png",
+  },
+  {
+    name: "Thika Institute",
+    logo: "/images/logos/thika-institute.png",
+  },
+  {
+    name: "Rotary Club of Thika",
+    logo: "/images/logos/rotary-club-of-thika.png",
+  },
+  {
+    name: "MAC Dental",
+    logo: "/images/logos/mac-dental.png",
+  },
+  {
+    name: "Sugoon",
+    logo: "/images/logos/sugoon.png",
+  },
+  {
+    name: "Kenya Red Cross",
+    logo: "/images/logos/kenya-red-cross.png",
+  },
+  {
+    name: "Mount Kenya University",
+    logo: "/images/logos/mount-kenya-university.png",
+  },
+  {
+    name: "Capwell Industries",
+    logo: "/images/logos/capwell-industries.png",
+  },
+];
+
+type Partner = (typeof partners)[number];
+
+const partnerRows = [
+  partners.filter((_, index) => index % 2 === 0),
+  partners.filter((_, index) => index % 2 === 1),
 ];
 
 const containerVariants: Variants = {
@@ -51,6 +125,50 @@ const itemVariants: Variants = {
     transition: { type: "spring", stiffness: 100 },
   },
 };
+
+function LogoCard({ partner }: { partner: Partner }) {
+  return (
+    <figure className="flex h-24 w-44 shrink-0 items-center justify-center rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm shadow-slate-900/5 transition-all duration-300 hover:border-primary/25 hover:shadow-md hover:shadow-teal-900/10 md:h-28 md:w-56">
+      <img
+        src={partner.logo}
+        alt={partner.name}
+        className="max-h-full max-w-full object-contain"
+      />
+    </figure>
+  );
+}
+
+function LogoBelt({
+  partners,
+  reverse = false,
+}: {
+  partners: Partner[];
+  reverse?: boolean;
+}) {
+  return (
+    <div className="logo-marquee relative overflow-hidden py-2">
+      <div
+        className={`logo-marquee-track flex w-max ${
+          reverse ? "logo-marquee-track--reverse" : ""
+        }`}
+      >
+        {[0, 1].map((setIndex) => (
+          <div
+            key={setIndex}
+            aria-hidden={setIndex === 1}
+            className={`logo-marquee-group flex shrink-0 gap-4 pr-4 md:gap-6 md:pr-6 ${
+              setIndex === 1 ? "logo-marquee-duplicate" : ""
+            }`}
+          >
+            {partners.map((partner) => (
+              <LogoCard key={`${setIndex}-${partner.name}`} partner={partner} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Testimonials() {
   return (
@@ -116,15 +234,9 @@ export default function Testimonials() {
           <p className="text-sm text-gray-500 uppercase tracking-widest font-medium mb-8">
             Trusted by our partners
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            {partners.map((partner) => (
-              <div
-                key={partner}
-                className="px-6 py-3 bg-gray-50 rounded-xl text-gray-400 font-semibold text-sm hover:text-primary hover:bg-primary/5 transition-colors border border-gray-100"
-              >
-                {partner}
-              </div>
-            ))}
+          <div className="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/70 py-4">
+            <LogoBelt partners={partnerRows[0]} />
+            <LogoBelt partners={partnerRows[1]} reverse />
           </div>
         </motion.div>
       </div>

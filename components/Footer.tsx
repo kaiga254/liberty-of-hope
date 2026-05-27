@@ -14,12 +14,13 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+const logoSrc = "/images/logo/liberty-of-hope-logo.png";
+
 const quickLinks = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   { name: "Programs", href: "/programs" },
   { name: "Projects", href: "/projects" },
-  { name: "Get Involved", href: "/get-involved" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -35,44 +36,18 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-secondary text-white">
-        {/* Newsletter Strip */}
-        <div className="bg-primary">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div>
-                <h3 className="text-xl font-bold font-heading">
-                  Stay Connected With Our Mission
-                </h3>
-                <p className="text-teal-100 text-sm mt-1">
-                  Get updates on our impact, events, and how you can help.
-                </p>
-              </div>
-              <div className="flex gap-3 w-full md:w-auto">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 flex-1 md:w-64"
-                />
-                <button className="px-6 py-3 bg-white text-primary rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors shrink-0 cursor-pointer flex items-center gap-2">
-                  Subscribe <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Main Footer */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             {/* Brand */}
             <div className="space-y-5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-white fill-current" />
-                </div>
-                <span className="text-xl font-bold font-heading">
-                  Liberty of Hope
-                </span>
+              <div className="inline-flex rounded-xl bg-white p-3">
+                <img
+                  src={logoSrc}
+                  alt="Liberty of Hope"
+                  className="block object-contain"
+                  style={{ height: "6rem", width: "auto" }}
+                />
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Restoring dignity to the aged in Thika and beyond. We believe
@@ -143,7 +118,7 @@ export default function Footer() {
             {/* CTA */}
             <div>
               <h4 className="text-base font-semibold mb-6 flex items-center gap-2">
-                Support a Senior
+                Support an elder
                 <span className="block h-0.5 w-8 bg-primary rounded" />
               </h4>
               <p className="text-gray-400 text-sm mb-5">
@@ -158,7 +133,7 @@ export default function Footer() {
                 Donate Now
               </button>
               <Link
-                href="/get-involved"
+                href="/contact"
                 className="mt-3 inline-flex items-center gap-2 text-primary-light hover:text-white text-sm font-medium transition-colors w-full justify-center"
               >
                 Or become a volunteer <ArrowRight className="w-4 h-4" />
@@ -172,7 +147,7 @@ export default function Footer() {
               &copy; {new Date().getFullYear()} Liberty of Hope. All rights
               reserved.
             </p>
-            <div className="flex gap-6">
+            {/* <div className="flex gap-6">
               <a href="#" className="hover:text-primary transition-colors">
                 Privacy Policy
               </a>
@@ -182,7 +157,7 @@ export default function Footer() {
               <a href="#" className="hover:text-primary transition-colors">
                 Financial Reports
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </footer>
