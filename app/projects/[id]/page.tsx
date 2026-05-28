@@ -6,88 +6,14 @@ import { Calendar, MapPin, ArrowLeft, Heart, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import DonationModal from "@/components/Modals/DonationModal";
-
-const projectsData = [
-  {
-    id: "1",
-    title: "Thika Elders Medical Camp 2024",
-    category: "Health",
-    date: "March 15, 2024",
-    location: "Makongeni, Thika",
-    description:
-      "A comprehensive medical checkup camp providing free screenings, medicine, vision screening, and diabetes management education for over 200 seniors.",
-    details:
-      "Our annual medical camp addressed the glaring health gaps faced by elders in Thika. Many seniors lack access to basic healthcare due to mobility issues and financial constraints. During this camp, we partnered with local doctors, nurses, and ophthalmologists to offer comprehensive health assessments. Beyond just checkups, we distributed essential medications and provided educational workshops on managing chronic conditions like diabetes and hypertension.",
-    goals: [
-      "Screen over 200 elders for eye defects",
-      "Provide free essential medicine",
-      "Offer education on diabetes dietary management",
-    ],
-    status: "Completed",
-    image: "/images/medical-camp.png",
-  },
-  {
-    id: "2",
-    title: "Grandparents' Social Day",
-    category: "Community",
-    date: "Ongoing (Monthly)",
-    location: "Liberty Hub",
-    description:
-      "A monthly gathering bringing together seniors for tea, games, and storytelling sessions to combat loneliness and isolation.",
-    details:
-      "Loneliness is one of the silent killers among the elderly. Grandparents' Social Day is our ongoing initiative to provide a safe, warm, and engaging environment where elders can connect. Through board games, traditional storytelling, and shared meals, we breathe life and joy back into their routines. It also serves as a platform for them to share their vast wisdom with younger volunteers.",
-    goals: [
-      "Foster community and belonging",
-      "Reduce isolation and depression rates",
-      "Provide nutritional support through shared meals",
-    ],
-    status: "Ongoing",
-    image: "/images/community-gathering.png",
-  },
-  {
-    id: "3",
-    title: "Home Hygiene Drive",
-    category: "Dignity",
-    date: "February 2024",
-    location: "Kiganjo Estate",
-    description:
-      "Renovated living spaces and provided bedding and hygiene kits for vulnerable elders living in squalid conditions.",
-    details:
-      "Dignity begins at home. Our Home Hygiene Drive targeted elders living in extremely poor conditions, often without basic sanitation or comfortable bedding. Our team of volunteers spent the month deep-cleaning homes, repairing leaking roofs, and replacing tattered mattresses with new, comfortable ones. We also distributed hygiene kits containing soap, sanitizers, adult diapers, and fresh clothing.",
-    goals: [
-      "Deep clean and sanitize 15 homes",
-      "Distribute sanitary kits and proper bedding",
-      "Improve overall living standards",
-    ],
-    status: "Completed",
-    image: "/images/hero-community.png",
-  },
-  {
-    id: "4",
-    title: "Urban Farming Initiative",
-    category: "Nutrition",
-    date: "Upcoming",
-    location: "Community Gardens",
-    description:
-      "Launching a program to teach and equip seniors with vertical sack gardens for sustainable vegetables.",
-    details:
-      "Nutrition is a critical aspect of elder care. The Urban Farming Initiative empowers seniors to grow their own fresh, organic produce right in their backyards, regardless of space constraints. Using vertical sack farming techniques, elders can cultivate leafy greens, tomatoes, and herbs with minimal physical strain. This not only supplements their diet but also provides therapeutic agricultural engagement.",
-    goals: [
-      "Install 50 vertical sack gardens",
-      "Provide seeds and organic fertilizers",
-      "Conduct specialized training for elders",
-    ],
-    status: "Upcoming",
-    image: "/images/elder-portrait.png",
-  },
-];
+import { getProjectById, projectStatusLabels } from "@/lib/projects";
 
 export default function ProjectDetail() {
   const params = useParams();
   const [isDonateOpen, setIsDonateOpen] = useState(false);
 
   const projectId = params?.id as string;
-  const project = projectsData.find((p) => p.id === projectId);
+  const project = getProjectById(projectId);
 
   if (!project) {
     return notFound();
@@ -125,14 +51,14 @@ export default function ProjectDetail() {
                 </span>
                 <span
                   className={`text-xs font-bold px-3 py-1 rounded-full border shadow-sm ${
-                    project.status === "Ongoing"
+                    project.status === "ongoing"
                       ? "bg-emerald-500 border-emerald-400 text-white"
-                      : project.status === "Upcoming"
+                      : project.status === "upcoming"
                         ? "bg-amber-500 border-amber-400 text-white"
                         : "bg-gray-100 border-gray-200 text-gray-600"
                   }`}
                 >
-                  {project.status}
+                  {projectStatusLabels[project.status]}
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-heading text-white leading-tight mb-2">

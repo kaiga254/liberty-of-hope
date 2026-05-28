@@ -1,10 +1,10 @@
 # Liberty of Hope Developer Documentation
 
-Last updated: 2026-05-27
+Last updated: 2026-05-28
 
 ## Project Overview
 
-Liberty of Hope is a public website for a community-based organization in Thika, Kenya that supports senior citizens through healthcare, nutrition, advocacy, social connection, personal care, donations, volunteering, and partnerships.
+Liberty of Hope is a public website for a community-based organization in Thika, Kenya that supports elderly citizens through healthcare, nutrition, advocacy, social connection, personal care, donations, volunteering, and partnerships.
 
 The site is built with Next.js App Router, React, TypeScript, Tailwind CSS, Framer Motion, and Lucide icons. It is currently a mostly static marketing and information site, with one client-side contact form integration through EmailJS and an optional Google Maps embed.
 
@@ -14,7 +14,7 @@ The main developer responsibilities are likely to be:
 - Maintaining the frontend experience across desktop and mobile.
 - Keeping environment variables configured for the contact form and map embed.
 - Deploying the site, most naturally to Vercel or another Node-compatible host.
-- Eventually refactoring duplicated hard-coded content into shared data files or a CMS if the organization needs frequent non-developer updates.
+- Keeping reusable content in the focused `lib/` domain data modules, or moving to a CMS if the organization needs frequent non-developer updates.
 
 ## Tech Stack
 
@@ -77,13 +77,13 @@ cp .env.example .env.local
 
 The project currently supports these public environment variables:
 
-| Variable | Required | Used In | Purpose |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS service id for sending contact form messages. |
-| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS template id. |
-| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS public key. |
-| `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY` | Optional | `app/contact/page.tsx` | Google Maps Embed API key. |
-| `NEXT_PUBLIC_GOOGLE_MAPS_QUERY` | Optional | `app/contact/page.tsx` | Place or address query for the embedded map and map search link. |
+| Variable                                | Required                                       | Used In                | Purpose                                                          |
+| --------------------------------------- | ---------------------------------------------- | ---------------------- | ---------------------------------------------------------------- |
+| `NEXT_PUBLIC_EMAILJS_SERVICE_ID`        | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS service id for sending contact form messages.            |
+| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`       | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS template id.                                             |
+| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`        | Optional, but needed for live form submissions | `app/contact/page.tsx` | EmailJS public key.                                              |
+| `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY` | Optional                                       | `app/contact/page.tsx` | Google Maps Embed API key.                                       |
+| `NEXT_PUBLIC_GOOGLE_MAPS_QUERY`         | Optional                                       | `app/contact/page.tsx` | Place or address query for the embedded map and map search link. |
 
 If the EmailJS variables are missing, the contact form validates input but shows a fallback message asking users to email `info@libertyofhope.org` directly.
 
@@ -98,10 +98,10 @@ This is a frontend-first Next.js application.
 - `app/layout.tsx` defines global metadata, fonts, the shared navbar, the main page wrapper, and the shared footer.
 - `app/page.tsx` composes the homepage from section components in `components/`.
 - `app/*/page.tsx` files define top-level pages for About, Programs, Projects, Donate, and Contact.
-- `app/projects/[id]/page.tsx` defines a dynamic project-detail route, but it reads from a local hard-coded array instead of fetching from a database.
+- `app/projects/[id]/page.tsx` defines a dynamic project-detail route and reads project records from `lib/projects.ts`.
 - `components/` contains shared and homepage section components.
 - `components/Modals/DonationModal.tsx` contains the reusable donation modal opened from the navbar, footer, recent projects, and project detail page.
-- `lib/animations.ts` centralizes common Framer Motion variants.
+- `lib/` contains domain data modules and shared Framer Motion variants.
 - `public/images/` contains all image assets, logos, and profile images.
 - `app/globals.css` defines Tailwind import, CSS variables, theme tokens, fonts, global styles, and partner logo marquee animation.
 
@@ -109,47 +109,52 @@ There is no API route, database, authentication, CMS, or server-side data fetchi
 
 ## Application Routes
 
-| Route | File | Purpose |
-| --- | --- | --- |
-| `/` | `app/page.tsx` | Homepage composed from hero, intro, values, stats, impact highlights, testimonials, recent projects, and CTA sections. |
-| `/about` | `app/about/page.tsx` | Organization story, values, and team. |
-| `/programs` | `app/programs/page.tsx` | Program pillars and contact CTA. |
-| `/projects` | `app/projects/page.tsx` | Project listing with status badges, links to project detail pages, and donation CTA for active/upcoming work. |
-| `/projects/[id]` | `app/projects/[id]/page.tsx` | Project detail page using the `id` from the URL and local `projectsData`. |
-| `/donate` | `app/donate/page.tsx` | Full donation page with M-Pesa, bank transfer, trust indicators, and FAQs. |
-| `/contact` | `app/contact/page.tsx` | Contact information, optional Google map, and EmailJS-powered contact form. |
-
-Important: Several components currently link to `/get-involved`, but there is no `app/get-involved/page.tsx` route. See "Known Issues And Maintenance Notes".
+| Route            | File                         | Purpose                                                                                                                |
+| ---------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `/`              | `app/page.tsx`               | Homepage composed from hero, intro, values, stats, impact highlights, testimonials, recent projects, and CTA sections. |
+| `/about`         | `app/about/page.tsx`         | Organization story, values, and team.                                                                                  |
+| `/programs`      | `app/programs/page.tsx`      | Program pillars and contact CTA.                                                                                       |
+| `/projects`      | `app/projects/page.tsx`      | Project listing with status badges, links to project detail pages, and donation CTA for active/upcoming work.          |
+| `/projects/[id]` | `app/projects/[id]/page.tsx` | Project detail page using the `id` from the URL and `getProjectById()` from `lib/projects.ts`.                        |
+| `/donate`        | `app/donate/page.tsx`        | Full donation page with M-Pesa, bank transfer, trust indicators, and FAQs.                                             |
+| `/contact`       | `app/contact/page.tsx`       | Contact information, optional Google map, and EmailJS-powered contact form.                                            |
 
 ## File And Folder Guide
 
 ```text
 app/
   about/page.tsx           About page content, values, and team list.
-  contact/page.tsx         Contact details, EmailJS form, map embed/fallback.
-  donate/page.tsx          Donation instructions and donation FAQ.
+  contact/page.tsx         Contact page UI, EmailJS form, map embed/fallback.
+  donate/page.tsx          Donation page UI using shared donation data.
   globals.css              Global CSS, Tailwind theme tokens, marquee animation.
   layout.tsx               Root layout, metadata, fonts, navbar, footer.
   page.tsx                 Homepage composition.
-  programs/page.tsx        Program pillar list and program CTA.
-  projects/page.tsx        Project listing page.
-  projects/[id]/page.tsx   Dynamic project detail page.
+  programs/page.tsx        Program pillar UI and program CTA.
+  projects/page.tsx        Project listing page using shared project data.
+  projects/[id]/page.tsx   Dynamic project detail page using shared project data.
 
 components/
-  CoreValues.tsx           Homepage care pillars.
-  Footer.tsx               Site footer, quick links, social links, contact info.
+  CoreValues.tsx           Homepage care pillar renderer.
+  Footer.tsx               Site footer, quick links, social links, contact display.
   Hero.tsx                 Homepage hero.
   ImpactHighlights.tsx     Homepage focus areas with alternating image sections.
   Intro.tsx                Homepage introduction.
   Modals/DonationModal.tsx Reusable donation modal.
   Navbar.tsx               Fixed navbar, mobile menu, donation modal trigger.
-  RecentProjects.tsx       Homepage recent project cards.
-  Stats.tsx                Animated impact counters.
-  Testimonials.tsx         Testimonials and partner logo marquee.
-  VisionBanner.tsx         Homepage action CTA section.
+  RecentProjects.tsx       Homepage recent project card renderer.
+  Stats.tsx                Animated impact counter renderer.
+  Testimonials.tsx         Testimonials and partner logo marquee renderer.
+  VisionBanner.tsx         Homepage action CTA section renderer.
 
 lib/
   animations.ts            Shared Framer Motion variants.
+  community.ts             Testimonials and partner logo data.
+  contact.ts               Shared contact details for contact page and footer.
+  donation.ts              Shared donation payment details and FAQs.
+  home.ts                  Homepage stats, highlights, and CTA actions.
+  programs.ts              Shared program/pillar data.
+  projects.ts              Shared project data for listing, detail, and homepage cards.
+  site.ts                  Shared logo, nav links, and social links.
 
 public/images/
   Main site images, organization logo, partner logos, and profile images.
@@ -163,7 +168,7 @@ It imports the Inter and Poppins Google fonts, applies global classes to the `<b
 
 The global metadata is also defined here:
 
-- Title: `Liberty of Hope - Restoring Dignity to Every Senior Life`
+- Title: `Liberty of Hope — Restoring Dignity to Every Senior Life`
 - Description: community-based organization in Thika, Kenya
 - Keywords: elderly care, senior citizens, Thika, donation, volunteering, and related terms
 
@@ -213,9 +218,9 @@ When adding animated sections, reuse the shared variants unless the animation ha
 
 ## Navigation
 
-The primary navigation is defined in `components/Navbar.tsx`.
+The primary navigation is rendered by `components/Navbar.tsx`.
 
-The `navLinks` array controls desktop and mobile navigation:
+The `navLinks` array in `lib/site.ts` controls desktop and mobile navigation:
 
 ```ts
 const navLinks = [
@@ -235,7 +240,7 @@ The navbar:
 - Has a mobile menu powered by local React state and `AnimatePresence`.
 - Opens `DonationModal` through local state.
 
-If you add a new top-level page, update `navLinks` here and usually update `quickLinks` in `components/Footer.tsx` too.
+If you add a new top-level page, update `navLinks` in `lib/site.ts`. The footer uses the same navigation data.
 
 ## Donation Experience
 
@@ -244,7 +249,7 @@ Donation information appears in two places:
 - `components/Modals/DonationModal.tsx` for the modal.
 - `app/donate/page.tsx` for the full donation page.
 
-Current donation details shown in the modal:
+Current donation details live in `lib/donation.ts` and are used by both the modal and full donate page:
 
 - M-Pesa Paybill Number: `542542`
 - M-Pesa Account Number: `32419`
@@ -252,9 +257,7 @@ Current donation details shown in the modal:
 - Account Name: `Liberty of Hope`
 - Account Number: `01234567890`
 
-Current donation details shown in the donate page include the same visible M-Pesa Paybill and account values, but the "How to pay" instructions still say "Business Number: 123456" and "Account: Liberty". This should be verified and corrected so all donation instructions match.
-
-When donation details change, update both files together and test:
+When donation details change, update `lib/donation.ts` and test:
 
 - The navbar Donate button.
 - The footer Donate button.
@@ -291,11 +294,11 @@ The form does not use a backend route, so spam protection, rate limiting, and se
 
 The contact page optionally embeds a Google Map.
 
-Map configuration lives in `app/contact/page.tsx`:
+Map configuration lives in `app/contact/page.tsx`, with the default query coming from `lib/contact.ts`:
 
 - `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY`
 - `NEXT_PUBLIC_GOOGLE_MAPS_QUERY`
-- `DEFAULT_MAP_QUERY`
+- `defaultMapQuery`
 
 If the API key is present, the page renders a Google Maps Embed API iframe. If it is missing, the page renders a custom fallback panel with the configured address.
 
@@ -303,7 +306,7 @@ The "Open Map" link always points to Google Maps search using the configured que
 
 ## Content Editing Guide
 
-Most content is currently hard-coded in React files. There is no central content directory yet.
+Reusable public content lives in focused domain files under `lib/`. Page-only copy can remain in the relevant route or component until it needs reuse elsewhere.
 
 ### Homepage
 
@@ -318,7 +321,7 @@ Homepage composition is in `app/page.tsx`. The sections are rendered in this ord
 7. `RecentProjects`
 8. `VisionBanner`
 
-Edit the individual files in `components/` to change the section content.
+Edit `lib/home.ts`, `lib/programs.ts`, `lib/community.ts`, and `lib/projects.ts` for reused homepage section data. Edit individual files in `components/` for layout, motion, or one-off section copy.
 
 ### About Page
 
@@ -332,42 +335,45 @@ The team data is in the `team` array. Team images currently reuse `public/images
 
 ### Programs Page
 
-Edit `app/programs/page.tsx` for:
+Edit `lib/programs.ts` for the shared program/pillar data used by both the homepage and Programs page:
 
 - Program titles.
 - Program descriptions.
 - Program icons.
 - Program gradients.
+
+Edit `app/programs/page.tsx` for:
+
 - Bottom CTA text.
 
-The homepage care pillars in `components/CoreValues.tsx` duplicate similar program content. Update both if the public program model changes.
+The Programs page and `components/CoreValues.tsx` both import `carePillars` from `lib/programs.ts`.
 
 ### Projects Page
 
-Project data appears in multiple places:
+Project data lives in `lib/projects.ts` and is used by:
 
 - `components/RecentProjects.tsx` for the homepage project cards.
 - `app/projects/page.tsx` for the project listing page.
-- `app/projects/[id]/page.tsx` for detail pages.
+- `app/projects/[id]/page.tsx` for project detail pages.
 
-These arrays are not shared. When adding or changing a project, update all relevant arrays manually and check that:
+Use `getProjectById()` for detail pages and `getFeaturedProjects()` for homepage cards.
+
+Project data is centralized in `lib/projects.ts`. When adding or changing a project, update that file and check that:
 
 - The `id` in the listing matches the detail route.
-- The detail page has a matching project in `projectsData`.
 - The image file exists in `public/images/`.
 - Status values are consistent.
 - Completed projects link to a meaningful story.
 - Ongoing/upcoming projects open the donation modal when appropriate.
 
-This duplication is a good future refactor candidate. A shared file such as `lib/projects.ts` would reduce drift.
-
 ### Testimonials And Partners
 
-Edit `components/Testimonials.tsx` for:
+Edit `lib/community.ts` for:
 
 - Beneficiary or volunteer testimonials.
 - Partner logo list.
-- Partner logo marquee behavior.
+
+Edit `components/Testimonials.tsx` or `app/globals.css` for partner logo marquee behavior.
 
 Partner logo files live in `public/images/logos/`.
 
@@ -384,7 +390,7 @@ Reduced-motion users get a non-animated wrapped logo layout.
 
 ### Statistics
 
-Edit `components/Stats.tsx` for homepage impact numbers.
+Stats data lives in `lib/home.ts`; `components/Stats.tsx` handles the animated counter UI.
 
 The animated counter uses Framer Motion's `useMotionValue`, `useSpring`, and `useInView`. Each stat has:
 
@@ -398,12 +404,12 @@ The animated counter uses Framer Motion's `useMotionValue`, `useSpring`, and `us
 
 Edit `components/Footer.tsx` for:
 
-- Footer quick links.
-- Footer contact address, phone, and email.
-- Social links.
 - Footer donate CTA.
 
-Social links currently use `#` placeholders. Replace them with real URLs before launch.
+Edit `lib/site.ts` for the logo path, navigation links, and social links.
+Edit `lib/contact.ts` for contact address, phone, email, and office hours used by both the contact page and footer.
+
+Social links in `lib/site.ts` currently use `#` placeholders. Replace them with real URLs before launch.
 
 ## Images And Assets
 
@@ -476,22 +482,14 @@ Then manually check:
 
 These are current codebase observations a future maintainer should know about:
 
-- `/get-involved` is linked from `components/Hero.tsx` and `app/programs/page.tsx`, but no matching route exists. Either create `app/get-involved/page.tsx` or change those links to `/contact`.
-- `app/projects/[id]/page.tsx` references `/images/community-gathering.png` for project id `2`, but the existing asset is `public/images/community-gathering.jpg`. This can cause a broken image on `/projects/2`.
-- Donation details are duplicated in `components/Modals/DonationModal.tsx` and `app/donate/page.tsx`. The donate page instructions mention `Business Number: 123456` while the displayed Paybill is `542542`. Verify the official payment details and align both places.
-- `components/Modals/DonationModal.tsx` declares `selectedAmount` and `setSelectedAmount`, but the selected amount UI is not rendered. Remove this unused state or complete the amount selector.
-- Project data is duplicated across homepage, listing, and detail files. A shared `lib/projects.ts` module would reduce future content drift.
-- Program/pillar content is duplicated between `components/CoreValues.tsx` and `app/programs/page.tsx`. Consider sharing data if program details change often.
-- Social links in `components/Footer.tsx` currently point to `#` placeholders.
-- Contact details appear in both `components/Footer.tsx` and `app/contact/page.tsx`. Keep them synchronized or move them into a shared constants file.
+- Social links in `lib/site.ts` currently point to `#` placeholders.
 - The contact form is client-only. For stronger abuse protection and observability, add a server-side endpoint and anti-spam protection.
 
 ## Suggested Future Improvements
 
 These are not required to run the project, but they would make long-term maintenance easier:
 
-- Create shared content modules such as `lib/projects.ts`, `lib/programs.ts`, `lib/contact.ts`, and `lib/donation.ts`.
-- Add a real `/get-involved` page or redirect all involvement CTAs to `/contact`.
+- Move remaining page-only content such as About page values/team into a shared module if it needs reuse elsewhere.
 - Replace placeholder social links with real organization profiles.
 - Add Open Graph metadata and social preview images for better link sharing.
 - Use Next.js `Image` for optimized images if remote/image behavior is finalized.
@@ -509,12 +507,12 @@ A new developer can get productive quickly by following this sequence:
 4. Read `app/page.tsx` to understand the homepage composition.
 5. Open each component in `components/` while viewing the homepage sections.
 6. Read `app/contact/page.tsx` carefully because it contains the most behavior: validation, EmailJS submission, environment variable handling, and map fallback.
-7. Read `app/projects/page.tsx` and `app/projects/[id]/page.tsx` together to understand project routing and current content duplication.
+7. Read `lib/projects.ts`, `app/projects/page.tsx`, and `app/projects/[id]/page.tsx` together to understand project routing and shared project data.
 8. Review `app/globals.css` to understand colors, fonts, and logo marquee behavior.
 9. Run `npm run lint` and `npm run build` before making a release.
 
 ## Ownership Notes
 
-The project is small and approachable, but the content is tightly coupled to the UI. The most important thing for future maintainers is to update duplicated content consistently until shared data modules or a CMS are introduced.
+The project is small and approachable, with reusable public content moving into focused `lib/` domain modules. Keep new shared data in the relevant domain file unless it is truly page-only.
 
 For urgent production fixes, start with the relevant route file in `app/` or section component in `components/`, then verify the navbar, footer, donation modal, and mobile layout before deploying.

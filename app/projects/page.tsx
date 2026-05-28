@@ -4,55 +4,9 @@ import { motion } from "framer-motion";
 import { Calendar, MapPin, ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
 import { fadeInUp, stagger } from "@/lib/animations";
+import { projects, projectStatusLabels } from "@/lib/projects";
 import { useState } from "react";
 import DonationModal from "@/components/Modals/DonationModal";
-
-const projects = [
-  {
-    id: 1,
-    title: "Thika Medical Camp 2024",
-    category: "Health",
-    date: "March 15, 2024",
-    location: "Makongeni, Thika",
-    description:
-      "Served over 200 seniors with free medical checkups, vision screening, and diabetes management education.",
-    status: "Completed",
-    image: "/images/medical-camp.png",
-  },
-  {
-    id: 2,
-    title: "Grandparents' Social Day",
-    category: "Community",
-    date: "Ongoing (Monthly)",
-    location: "Liberty Hub",
-    description:
-      "A monthly gathering bringing together 50+ seniors for tea, games, and storytelling sessions to combat loneliness.",
-    status: "Ongoing",
-    image: "/images/community-gathering.jpg",
-  },
-  {
-    id: 3,
-    title: "Home Hygiene Drive",
-    category: "Dignity",
-    date: "Feb 2024",
-    location: "Kiganjo Estate",
-    description:
-      "Renovated living spaces and provided bedding and hygiene kits for 15 vulnerable elders living in squalid conditions.",
-    status: "Completed",
-    image: "/images/hero-community.png",
-  },
-  {
-    id: 4,
-    title: "Urban Farming Initiative",
-    category: "Nutrition",
-    date: "Upcoming",
-    location: "Community Gardens",
-    description:
-      "Launching a program to teach and equip seniors with vertical sack gardens for sustainable vegetables.",
-    status: "Upcoming",
-    image: "/images/elder-portrait.png",
-  },
-];
 
 export default function ProjectsPage() {
   const [isDonateOpen, setIsDonateOpen] = useState(false);
@@ -99,7 +53,7 @@ export default function ProjectsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {projects.map((project, index) => (
                 <motion.div
-                  key={index}
+                  key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -125,19 +79,19 @@ export default function ProjectsPage() {
                       </span>
                       <span
                         className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                          project.status === "Ongoing"
+                          project.status === "ongoing"
                             ? "text-emerald-600 bg-emerald-50"
-                            : project.status === "Upcoming"
+                            : project.status === "upcoming"
                               ? "text-amber-600 bg-amber-50"
                               : "text-gray-500 bg-gray-100"
                         }`}
                       >
-                        {project.status}
+                        {projectStatusLabels[project.status]}
                       </span>
                     </div>
 
                     <h3 className="text-xl font-bold text-secondary mb-2 font-heading group-hover:text-primary transition-colors">
-                      {project.title}
+                      {project.cardTitle ?? project.title}
                     </h3>
 
                     <div className="space-y-2 mb-4 text-sm text-gray-500">
@@ -152,7 +106,7 @@ export default function ProjectsPage() {
                     </div>
 
                     <p className="text-gray-600 text-sm mb-6 grow">
-                      {project.description}
+                      {project.summary}
                     </p>
 
                     <div className="mt-auto flex gap-3">
@@ -162,7 +116,7 @@ export default function ProjectsPage() {
                       >
                         Read Story <ArrowRight className="w-4 h-4 ml-1" />
                       </Link>
-                      {project.status !== "Completed" && (
+                      {project.status !== "completed" && (
                         <button
                           onClick={() => setIsDonateOpen(true)}
                           className="inline-flex items-center gap-1.5 text-accent-rose text-sm font-semibold cursor-pointer"

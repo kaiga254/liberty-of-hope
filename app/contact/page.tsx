@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { fadeInUp, fadeInLeft, fadeInRight, stagger } from "@/lib/animations";
+import { contactInfo, defaultMapQuery } from "@/lib/contact";
 
 type ContactFormData = {
   name: string;
@@ -26,12 +27,6 @@ type ContactFormData = {
 type ContactFormErrors = Partial<Record<keyof ContactFormData, string>>;
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
-const CONTACT_EMAIL = "info@libertyofhope.org";
-const CONTACT_PHONE = "+254 700 123 456";
-const CONTACT_PHONE_LINK = "+254700123456";
-const CONTACT_LOCATION = "Thika Town, Near Main Market";
-const CONTACT_REGION = "Kiambu County, Kenya";
-const DEFAULT_MAP_QUERY = `${CONTACT_LOCATION}, ${CONTACT_REGION}`;
 const EMAILJS_ENDPOINT = "https://api.emailjs.com/api/v1.0/email/send";
 
 const subjectOptions = [
@@ -63,7 +58,7 @@ const isEmailJsConfigured = Boolean(
 const mapsApiKey =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_API_KEY?.trim() ?? "";
 const mapsQuery =
-  process.env.NEXT_PUBLIC_GOOGLE_MAPS_QUERY?.trim() || DEFAULT_MAP_QUERY;
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_QUERY?.trim() || defaultMapQuery;
 const encodedMapsQuery = encodeURIComponent(mapsQuery);
 const isGoogleMapsConfigured = Boolean(mapsApiKey);
 const googleMapsEmbedSrc = `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
@@ -185,8 +180,8 @@ export default function ContactPage() {
       setStatus("error");
       setFeedback(
         isEmailJsConfigured
-          ? `We could not send your message. Please email us directly at ${CONTACT_EMAIL}.`
-          : `The online form is being connected. Please email us directly at ${CONTACT_EMAIL}.`
+          ? `We could not send your message. Please email us directly at ${contactInfo.email.label}.`
+          : `The online form is being connected. Please email us directly at ${contactInfo.email.label}.`
       );
     }
   };
@@ -258,9 +253,9 @@ export default function ContactPage() {
                       Visit Us
                     </h4>
                     <p className="text-gray-600">
-                      {CONTACT_LOCATION}
+                      {contactInfo.address.line1}
                       <br />
-                      {CONTACT_REGION}
+                      {contactInfo.address.line2}
                     </p>
                   </div>
                 </div>
@@ -274,10 +269,10 @@ export default function ContactPage() {
                       Email Us
                     </h4>
                     <a
-                      href={`mailto:${CONTACT_EMAIL}`}
+                      href={contactInfo.email.href}
                       className="text-gray-600 transition-colors hover:text-primary"
                     >
-                      {CONTACT_EMAIL}
+                      {contactInfo.email.label}
                     </a>
                   </div>
                 </div>
@@ -291,10 +286,10 @@ export default function ContactPage() {
                       Call Us
                     </h4>
                     <a
-                      href={`tel:${CONTACT_PHONE_LINK}`}
+                      href={contactInfo.phone.href}
                       className="text-gray-600 transition-colors hover:text-primary"
                     >
-                      {CONTACT_PHONE}
+                      {contactInfo.phone.label}
                     </a>
                   </div>
                 </div>
@@ -308,9 +303,9 @@ export default function ContactPage() {
                       Office Hours
                     </h4>
                     <p className="text-gray-600">
-                      Monday – Friday: 8:00 AM – 5:00 PM
+                      {contactInfo.officeHours[0]}
                       <br />
-                      Saturday: 9:00 AM – 1:00 PM
+                      {contactInfo.officeHours[1]}
                     </p>
                   </div>
                 </div>
@@ -342,10 +337,10 @@ export default function ContactPage() {
                           <MapPin className="h-6 w-6" />
                         </div>
                         <p className="font-semibold text-secondary">
-                          {CONTACT_LOCATION}
+                          {contactInfo.address.line1}
                         </p>
                         <p className="mt-1 text-sm text-gray-600">
-                          {CONTACT_REGION}
+                          {contactInfo.address.line2}
                         </p>
                       </div>
                     </div>
@@ -357,7 +352,7 @@ export default function ContactPage() {
                       Liberty of Hope on Google Maps
                     </p>
                     <p className="text-sm text-gray-500">
-                      {CONTACT_LOCATION}, {CONTACT_REGION}
+                      {contactInfo.address.line1}, {contactInfo.address.line2}
                     </p>
                   </div>
                   <a

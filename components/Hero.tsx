@@ -55,7 +55,7 @@ export default function Hero() {
                 Donate Now
               </Link>
               <Link
-                href="/get-involved"
+                href="/contact"
                 className="group bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-2"
               >
                 Get Involved

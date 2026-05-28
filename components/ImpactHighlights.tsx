@@ -1,35 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Users, Smile } from "lucide-react";
+import { Heart, Users, Smile, type LucideIcon } from "lucide-react";
 import { fadeInUp, stagger } from "@/lib/animations";
+import {
+  impactHighlights as highlights,
+  type ImpactIconName,
+} from "@/lib/home";
 
-const highlights = [
-  {
-    title: "Healthcare Access",
-    description:
-      "Providing regular medical checkups, screenings, and health education to ensure physical well-being. We partner with local clinics to bring doctors directly to the elderly, removing the barrier of transportation and cost.",
-    icon: Heart,
-    colorClass: "bg-teal-100 text-primary",
-    image: "/images/medical-camp.png",
-  },
-  {
-    title: "Timeless Connection",
-    description:
-      "Combating loneliness through peer support groups and community social gatherings. Our weekly meetups provide a safe space for elders to share stories, play games, and build lasting friendships that enrich their golden years.",
-    icon: Users,
-    colorClass: "bg-violet-100 text-violet-600",
-    image: "/images/community-gathering.jpg",
-  },
-  {
-    title: "Restored Dignity",
-    description:
-      "Support with personal care, hygiene, and grooming to build confidence and self-worth. We believe that looking good feels good, and our volunteers ensure every elder feels respected and cared for.",
-    icon: Smile,
-    colorClass: "bg-amber-100 text-accent",
-    image: "/images/restoring-dignity.jpg",
-  },
-];
+const impactIcons: Record<ImpactIconName, LucideIcon> = {
+  heart: Heart,
+  users: Users,
+  smile: Smile,
+};
 
 export default function ImpactHighlights() {
   return (
@@ -59,6 +42,7 @@ export default function ImpactHighlights() {
         >
           {highlights.map((item, index) => {
             const isEven = index % 2 === 0;
+            const Icon = impactIcons[item.icon];
             return (
               <motion.div
                 key={item.title}
@@ -76,7 +60,7 @@ export default function ImpactHighlights() {
                     <div
                       className={`w-14 h-14 rounded-2xl flex items-center justify-center ${item.colorClass} shadow-sm`}
                     >
-                      <item.icon className="w-7 h-7" />
+                      <Icon className="w-7 h-7" />
                     </div>
                     <div className="h-px flex-grow bg-gray-200 rounded-full" />
                   </div>

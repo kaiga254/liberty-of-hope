@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Heart, Shield, Check } from "lucide-react";
 import { fadeInUp, stagger } from "@/lib/animations";
+import { donationDetails, donationFaqs } from "@/lib/donation";
 
 export default function DonatePage() {
   return (
@@ -63,23 +64,23 @@ export default function DonatePage() {
                     Paybill Number
                   </p>
                   <p className="font-mono font-bold text-2xl text-secondary tracking-wider">
-                    542542
+                    {donationDetails.mpesa.paybill}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
                     Account Number
                   </p>
-                  <p className="font-semibold text-secondary">32419</p>
+                  <p className="font-semibold text-secondary">
+                    {donationDetails.mpesa.accountNumber}
+                  </p>
                 </div>
                 <div className="text-sm text-gray-500 bg-gray-50 rounded-xl p-3">
                   <p className="font-medium mb-1">How to pay:</p>
                   <ol className="list-decimal list-inside space-y-1 text-xs">
-                    <li>Go to M-Pesa on your phone</li>
-                    <li>Select Lipa na M-Pesa → Pay Bill</li>
-                    <li>Enter Business Number: 123456</li>
-                    <li>Enter Account: Liberty</li>
-                    <li>Enter Amount and confirm</li>
+                    {donationDetails.mpesa.instructions.map((instruction) => (
+                      <li key={instruction}>{instruction}</li>
+                    ))}
                   </ol>
                 </div>
               </div>
@@ -98,14 +99,16 @@ export default function DonatePage() {
                   <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
                     Bank
                   </p>
-                  <p className="font-semibold text-secondary">Equity Bank</p>
+                  <p className="font-semibold text-secondary">
+                    {donationDetails.bank.bankName}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
                     Account Name
                   </p>
                   <p className="font-semibold text-secondary">
-                    Liberty of Hope
+                    {donationDetails.bank.accountName}
                   </p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-4">
@@ -113,7 +116,7 @@ export default function DonatePage() {
                     Account Number
                   </p>
                   <p className="font-mono font-bold text-xl text-secondary tracking-wider">
-                    01234567890
+                    {donationDetails.bank.accountNumber}
                   </p>
                 </div>
               </div>
@@ -145,24 +148,7 @@ export default function DonatePage() {
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">
-            {[
-              {
-                q: "How is my donation used?",
-                a: "100% of your donation goes directly to elder care programs including healthcare, nutrition, hygiene, and community support.",
-              },
-              {
-                q: "Can I donate from outside Kenya?",
-                a: "Yes! You can make an international bank transfer to our Equity Bank account. Contact us for SWIFT/BIC details.",
-              },
-              {
-                q: "Is my donation tax-deductible?",
-                a: "Liberty of Hope is a registered community-based organization. We can provide donation receipts for your records.",
-              },
-              {
-                q: "Can I donate items instead of money?",
-                a: "Absolutely! We accept food, clothing, bedding, hygiene products, and medical supplies. Contact us to arrange drop-off.",
-              },
-            ].map((faq) => (
+            {donationFaqs.map((faq) => (
               <div
                 key={faq.q}
                 className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm"

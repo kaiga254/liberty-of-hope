@@ -7,50 +7,17 @@ import {
   Apple,
   HeartHandshake,
   Megaphone,
+  type LucideIcon,
 } from "lucide-react";
+import { carePillars as pillars, type ProgramIconName } from "@/lib/programs";
 
-const pillars = [
-  {
-    title: "Health & Wellness",
-    description:
-      "Organizing medical camps, geriatric screenings, and partnerships with local hospitals for accessible healthcare.",
-    outcome: "200+ elders screened in our latest medical camp",
-    icon: Stethoscope,
-    gradient: "from-teal-500 to-emerald-600",
-  },
-  {
-    title: "Mental Health & Connection",
-    description:
-      "Combating isolation through peer support groups, social gatherings, and community visits for mental wellness.",
-    outcome: "Weekly social meetups reducing loneliness by 70%",
-    icon: Brain,
-    gradient: "from-violet-500 to-purple-600",
-  },
-  {
-    title: "Nutrition & Lifestyle",
-    description:
-      "Providing food baskets, nutritional education, and supporting sustainable kitchen gardens for healthy aging.",
-    outcome: "50+ elders receiving monthly food baskets",
-    icon: Apple,
-    gradient: "from-green-500 to-emerald-600",
-  },
-  {
-    title: "Dignity & Personal Care",
-    description:
-      "Restoring self-esteem through personal grooming, hygiene supplies, and home cleanliness for dignified living.",
-    outcome: "15 homes renovated in our latest hygiene drive",
-    icon: HeartHandshake,
-    gradient: "from-rose-500 to-pink-600",
-  },
-  {
-    title: "Advocacy & Outreach",
-    description:
-      "Advocating for elder-friendly policies and conducting home visits to identify and support the most vulnerable.",
-    outcome: "Partnered with 2 county governments for policy change",
-    icon: Megaphone,
-    gradient: "from-amber-500 to-orange-600",
-  },
-];
+const programIcons: Record<ProgramIconName, LucideIcon> = {
+  stethoscope: Stethoscope,
+  brain: Brain,
+  apple: Apple,
+  heartHandshake: HeartHandshake,
+  megaphone: Megaphone,
+};
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -104,7 +71,7 @@ export default function CoreValues() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
           {pillars.map((pillar) => {
-            const Icon = pillar.icon;
+            const Icon = programIcons[pillar.icon];
             return (
               <motion.div
                 key={pillar.title}

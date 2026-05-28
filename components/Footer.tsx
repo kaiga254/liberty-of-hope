@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import DonationModal from "./Modals/DonationModal";
+import { contactInfo } from "@/lib/contact";
+import { logoSrc, navLinks, socialLinks, type SocialIconName } from "@/lib/site";
 import {
   Facebook,
   Twitter,
@@ -14,22 +16,12 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-const logoSrc = "/images/logo/liberty-of-hope-logo.png";
-
-const quickLinks = [
-  { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Programs", href: "/programs" },
-  { name: "Projects", href: "/projects" },
-  { name: "Contact", href: "/contact" },
-];
-
-const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-];
+const socialIcons: Record<SocialIconName, typeof Facebook> = {
+  facebook: Facebook,
+  twitter: Twitter,
+  instagram: Instagram,
+  youtube: Youtube,
+};
 
 export default function Footer() {
   const [isDonateOpen, setIsDonateOpen] = useState(false);
@@ -55,16 +47,19 @@ export default function Footer() {
                 health, and happiness.
               </p>
               <div className="flex space-x-3 pt-1">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    aria-label={social.label}
-                    className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all duration-200"
-                  >
-                    <social.icon className="w-4 h-4" />
-                  </a>
-                ))}
+                {socialLinks.map((social) => {
+                  const Icon = socialIcons[social.icon];
+                  return (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      aria-label={social.label}
+                      className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all duration-200"
+                    >
+                      <Icon className="w-4 h-4" />
+                    </a>
+                  );
+                })}
               </div>
             </div>
 
@@ -75,7 +70,7 @@ export default function Footer() {
                 <span className="block h-0.5 w-8 bg-primary rounded" />
               </h4>
               <ul className="space-y-3 text-sm">
-                {quickLinks.map((link) => (
+                {navLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -99,18 +94,28 @@ export default function Footer() {
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <span>
-                    Thika Town, Near Main Market
+                    {contactInfo.address.line1}
                     <br />
-                    Kiambu County, Kenya
+                    {contactInfo.address.line2}
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-primary shrink-0" />
-                  <span>+254 700 123 456</span>
+                  <a
+                    href={contactInfo.phone.href}
+                    className="transition-colors hover:text-primary"
+                  >
+                    {contactInfo.phone.label}
+                  </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-primary shrink-0" />
-                  <span>info@libertyofhope.org</span>
+                  <a
+                    href={contactInfo.email.href}
+                    className="transition-colors hover:text-primary"
+                  >
+                    {contactInfo.email.label}
+                  </a>
                 </li>
               </ul>
             </div>

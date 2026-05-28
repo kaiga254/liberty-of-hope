@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Heart, Phone, Building2, Shield, Check } from "lucide-react";
+import { donationDetails } from "@/lib/donation";
 
 export default function DonationModal({
   isDonateOpen,
@@ -11,8 +11,6 @@ export default function DonationModal({
   isDonateOpen: boolean;
   setIsDonateOpen: (value: boolean) => void;
 }) {
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(1000);
-
   return (
     <AnimatePresence>
       {isDonateOpen && (
@@ -69,14 +67,16 @@ export default function DonationModal({
                         Paybill Number
                       </p>
                       <p className="font-mono font-bold text-xl tracking-wider text-secondary">
-                        542542
+                        {donationDetails.mpesa.paybill}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                         Account Number
                       </p>
-                      <p className="font-medium text-secondary">32419</p>
+                      <p className="font-medium text-secondary">
+                        {donationDetails.mpesa.accountNumber}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -96,14 +96,16 @@ export default function DonationModal({
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                         Bank Name
                       </p>
-                      <p className="font-medium text-secondary">Equity Bank</p>
+                      <p className="font-medium text-secondary">
+                        {donationDetails.bank.bankName}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                         Account Name
                       </p>
                       <p className="font-medium text-secondary">
-                        Liberty of Hope
+                        {donationDetails.bank.accountName}
                       </p>
                     </div>
                     <div>
@@ -111,7 +113,7 @@ export default function DonationModal({
                         Account Number
                       </p>
                       <p className="font-mono font-bold text-lg tracking-wider text-secondary">
-                        01234567890
+                        {donationDetails.bank.accountNumber}
                       </p>
                     </div>
                   </div>

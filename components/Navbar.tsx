@@ -6,16 +6,7 @@ import { usePathname } from "next/navigation";
 import DonationModal from "./Modals/DonationModal";
 import { Menu, X, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const logoSrc = "/images/logo/liberty-of-hope-logo.png";
-
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Programs", href: "/programs" },
-  { name: "Projects", href: "/projects" },
-  { name: "Contact", href: "/contact" },
-];
+import { logoSrc, navLinks } from "@/lib/site";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

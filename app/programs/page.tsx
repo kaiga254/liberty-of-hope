@@ -2,53 +2,25 @@
 
 import { motion } from "framer-motion";
 import {
-  Stethoscope,
-  Brain,
   Apple,
+  ArrowRight,
+  Brain,
   HeartHandshake,
   Megaphone,
-  ArrowRight,
+  Stethoscope,
+  type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { fadeInUp, stagger } from "@/lib/animations";
+import { carePillars as programs, type ProgramIconName } from "@/lib/programs";
 
-const programs = [
-  {
-    title: "Health & Wellness",
-    description:
-      "Access to healthcare is a fundamental right. We organize medical camps, geriatric screenings, and partner with local hospitals to ensure our elders receive the care they need.",
-    icon: Stethoscope,
-    gradient: "from-teal-500 to-emerald-600",
-  },
-  {
-    title: "Mental Health & Connection",
-    description:
-      "Loneliness is a silent crisis. We combat isolation through peer support groups, social outings, and community visits to keep our elders connected and mentally sharp.",
-    icon: Brain,
-    gradient: "from-violet-500 to-purple-600",
-  },
-  {
-    title: "Nutrition & Lifestyle",
-    description:
-      "Good nutrition is the foundation of healthy aging. We provide food baskets, nutritional education, and support for sustainable kitchen gardens.",
-    icon: Apple,
-    gradient: "from-green-500 to-emerald-600",
-  },
-  {
-    title: "Dignity & Personal Care",
-    description:
-      "We restore self-esteem by assisting with personal grooming, hygiene supplies, and home cleanliness, ensuring every elder lives with dignity.",
-    icon: HeartHandshake,
-    gradient: "from-rose-500 to-pink-600",
-  },
-  {
-    title: "Advocacy & Outreach",
-    description:
-      "We are the voice for the voiceless. We advocate for policies that protect the rights of the aged and conduct home visits to identify those most in need.",
-    icon: Megaphone,
-    gradient: "from-amber-500 to-orange-600",
-  },
-];
+const programIcons: Record<ProgramIconName, LucideIcon> = {
+  stethoscope: Stethoscope,
+  brain: Brain,
+  apple: Apple,
+  heartHandshake: HeartHandshake,
+  megaphone: Megaphone,
+};
 
 export default function ProgramsPage() {
   return (
@@ -91,7 +63,7 @@ export default function ProgramsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {programs.map((program, index) => {
-              const Icon = program.icon;
+              const Icon = programIcons[program.icon];
               return (
                 <motion.div
                   key={program.title}
@@ -118,12 +90,12 @@ export default function ProgramsPage() {
                   </h3>
 
                   <p className="text-gray-600 leading-relaxed mb-6 grow">
-                    {program.description}
+                    {program.programDescription}
                   </p>
 
                   <div className="mt-auto">
                     <Link
-                      href="/get-involved"
+                      href="/contact"
                       className="inline-flex items-center text-primary font-semibold hover:gap-2 transition-all group/link"
                     >
                       Get Involved{" "}

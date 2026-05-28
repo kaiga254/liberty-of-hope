@@ -2,38 +2,21 @@
 
 import { useEffect, useRef } from "react";
 import { motion, useInView, useSpring, useMotionValue } from "framer-motion";
-import { Users, Stethoscope, HandHeart, MapPin } from "lucide-react";
+import {
+  Users,
+  Stethoscope,
+  HandHeart,
+  MapPin,
+  type LucideIcon,
+} from "lucide-react";
+import { impactStats as stats, type StatIconName } from "@/lib/home";
 
-const stats = [
-  {
-    label: "Elders Reached",
-    value: 500,
-    suffix: "+",
-    icon: Users,
-    color: "text-teal-400",
-  },
-  {
-    label: "Medical Camps",
-    value: 12,
-    suffix: "+",
-    icon: Stethoscope,
-    color: "text-emerald-400",
-  },
-  {
-    label: "Active Volunteers",
-    value: 20,
-    suffix: "+",
-    icon: HandHeart,
-    color: "text-amber-400",
-  },
-  {
-    label: "Counties Reached",
-    value: 2,
-    suffix: "+",
-    icon: MapPin,
-    color: "text-rose-400",
-  },
-];
+const statIcons: Record<StatIconName, LucideIcon> = {
+  users: Users,
+  stethoscope: Stethoscope,
+  handHeart: HandHeart,
+  mapPin: MapPin,
+};
 
 const Counter = ({ value, suffix }: { value: number; suffix: string }) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -93,7 +76,7 @@ export default function Stats() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {stats.map((stat, index) => {
-            const Icon = stat.icon;
+            const Icon = statIcons[stat.icon];
             return (
               <motion.div
                 key={index}

@@ -5,62 +5,14 @@ import DonationModal from "./Modals/DonationModal";
 import { MapPin, Calendar, ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
 import { fadeInUp, stagger } from "@/lib/animations";
+import {
+  getFeaturedProjects,
+  projectStatusLabels,
+  type ProjectStatus,
+} from "@/lib/projects";
 import { useState } from "react";
 
-type ProjectStatus = "completed" | "ongoing" | "upcoming";
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  venue: string;
-  date: string;
-  status: ProjectStatus;
-}
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "Thika Elders Medical Camp",
-    description:
-      "A comprehensive medical checkup camp providing free screenings, medicine, and health education for over 200 elders.",
-    image: "/images/medical-camp.png",
-    venue: "Thika Stadium",
-    date: "August 12, 2025",
-    status: "completed",
-  },
-  {
-    id: 2,
-    title: "Community Garden Initiative",
-    description:
-      "Establishing a communal garden where elders can engage in light farming, socialize, and grow their own fresh produce.",
-    image: "/images/community-gathering.jpg",
-    venue: "Section 9 Community Hall",
-    date: "October 5, 2025",
-    status: "ongoing",
-  },
-  {
-    id: 3,
-    title: "Digital Literacy for elders",
-    description:
-      "A workshop series teaching elders how to use smartphones to stay connected with family and access mobile banking.",
-    image: "/images/hero-community.png",
-    venue: "Liberty Hub",
-    date: "November 2025",
-    status: "ongoing",
-  },
-  {
-    id: 4,
-    title: "Annual Grandparents Day",
-    description:
-      "A grand celebration honoring our elders with entertainment, gifts, and a feast for the entire community.",
-    image: "/images/elder-portrait.png",
-    venue: "Blue Post Hotel",
-    date: "December 20, 2025",
-    status: "upcoming",
-  },
-];
+const projects = getFeaturedProjects();
 
 const StatusBadge = ({ status }: { status: ProjectStatus }) => {
   const styles = {
@@ -73,7 +25,7 @@ const StatusBadge = ({ status }: { status: ProjectStatus }) => {
     <span
       className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${styles[status]}`}
     >
-      {status}
+      {projectStatusLabels[status]}
     </span>
   );
 };
@@ -125,17 +77,18 @@ export default function RecentProjects() {
                     alt={project.title}
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
+                  <StatusBadge status={project.status} />
                 </div>
 
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-grow">
                   <h3 className="text-lg font-bold text-secondary mb-3 font-heading line-clamp-2 group-hover:text-primary transition-colors">
-                    {project.title}
+                    {project.cardTitle ?? project.title}
                   </h3>
 
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
                     <MapPin className="w-3.5 h-3.5 text-primary" />
-                    <span>{project.venue}</span>
+                    <span>{project.location}</span>
                   </div>
 
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
@@ -144,7 +97,7 @@ export default function RecentProjects() {
                   </div>
 
                   <p className="text-gray-600 text-sm mb-6 line-clamp-3">
-                    {project.description}
+                    {project.summary}
                   </p>
 
                   <div className="mt-auto">

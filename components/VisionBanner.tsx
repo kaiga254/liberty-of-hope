@@ -2,35 +2,24 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, Users, Handshake, ArrowRight } from "lucide-react";
+import {
+  Heart,
+  Users,
+  Handshake,
+  ArrowRight,
+  type LucideIcon,
+} from "lucide-react";
 import { fadeInUp, stagger } from "@/lib/animations";
+import {
+  visionBannerActions as actions,
+  type ActionIconName,
+} from "@/lib/home";
 
-const actions = [
-  {
-    title: "Donate",
-    description:
-      "Your gift directly supports healthcare, food, and shelter for vulnerable elders.",
-    icon: Heart,
-    href: "/donate",
-    color: "bg-rose-500 hover:bg-rose-600 shadow-rose-500/30",
-  },
-  {
-    title: "Volunteer",
-    description:
-      "Join our team of compassionate volunteers making a difference every day.",
-    icon: Users,
-    href: "/contact",
-    color: "bg-primary hover:bg-teal-800 shadow-teal-500/30",
-  },
-  {
-    title: "Partner",
-    description:
-      "Collaborate with us to scale our impact and reach more elders in need.",
-    icon: Handshake,
-    href: "/contact",
-    color: "bg-accent hover:bg-amber-600 shadow-amber-500/30",
-  },
-];
+const actionIcons: Record<ActionIconName, LucideIcon> = {
+  heart: Heart,
+  users: Users,
+  handshake: Handshake,
+};
 
 export default function VisionBanner() {
   return (
@@ -86,7 +75,7 @@ export default function VisionBanner() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
         >
           {actions.map((action) => {
-            const Icon = action.icon;
+            const Icon = actionIcons[action.icon];
             return (
               <motion.div key={action.title} variants={fadeInUp}>
                 <Link
